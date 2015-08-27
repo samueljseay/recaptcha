@@ -1,3 +1,8 @@
-%{"httpotion": {:hex, :httpotion, "2.1.0"},
+%{"exactor": {:hex, :exactor, "2.1.2"},
+  "exjsx": {:hex, :exjsx, "3.2.0"},
+  "exvcr": {:hex, :exvcr, "0.5.0"},
+  "httpotion": {:hex, :httpotion, "2.1.0"},
   "ibrowse": {:git, "git://github.com/cmullaparthi/ibrowse.git", "ea3305d21f37eced4fac290f64b068e56df7de80", [tag: "v4.1.2"]},
+  "jsx": {:hex, :jsx, "2.6.2"},
+  "meck": {:hex, :meck, "0.8.3"},
   "poison": {:hex, :poison, "1.5.0"}}
