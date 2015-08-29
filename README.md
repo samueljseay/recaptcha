@@ -1,8 +1,8 @@
 # Recaptcha
 
-A simple Elixir package for implementing [ReCaptcha] in [Phoenix] applications.
+A simple Elixir package for implementing [reCAPTCHA] in [Phoenix] applications.
 
-[ReCaptcha]: http://www.google.com/recaptcha
+[reCAPTCHA]: http://www.google.com/recaptcha
 [Phoenix]: http://www.phoenixframework.org/
 
 ## Installation
