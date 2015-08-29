@@ -1,48 +1,36 @@
 # Recaptcha
 
-A simple Elixir package for implementing [ReCaptcha] v2 in [Phoenix] applications.
+A simple Elixir package for implementing [ReCaptcha] in [Phoenix] applications.
 
 [ReCaptcha]: http://www.google.com/recaptcha
 [Phoenix]: http://www.phoenixframework.org/
 
 ## Installation
 
-Set as a dependency in the  and ensure it is running with your app:
-
-1) Add as a dependency to the mix.exs file
+1. Add recaptcha to your `mix.exs` dependencies
 
 ```elixir
   defp deps do
     [
-      # other deps
       {:recaptcha, "~> 0.0.1"},
-      {:ibrowse, github: "cmullaparthi/ibrowse", tag: "v4.1.2"},
-      # other deps
+      {:ibrowse, github: "cmullaparthi/ibrowse", tag: "v4.1.2"}
     ]
   end
 ```
 
-2) Add to your application list
+2. List `:recaptcha` as an application dependency
 
 ```elixir
 def application do
-  [
-    # ...
-    applications: [:phoenix, :recaptcha]
-    # ...
-  ]
+  [ applications: [:phoenix, :recaptcha] ]
 end
 ```
 
-Get your project's dependencies:
-
-```bash
-$ mix deps.get
-```
+3. Run `mix do deps.get, compile`
 
 ## Config
 
-In your application's config.exs :
+Set default public and private keys in your application's config.exs
 
 ```elixir
 config :recaptcha,
@@ -55,7 +43,7 @@ config :recaptcha,
 
 ### View
 
-In a template
+It is required to use the `raw` method to render the captcha, like this:
 
 ```html
 <form name="someform" method="post" action="/somewhere">
@@ -65,25 +53,20 @@ In a template
 </form>
 ```
 
-Display method accepts a keyword list with 2 possible options:
+`display` method accepts additional options as a keyword list, the options are:
 
-* `noscript` -> Set to true to render noscript code
-* `public_key` -> The key put in the `data-sitekey` reCaptcha div attribute, default is the public key set in the config file
- 
-Pass these parameters like this:
+Option                  | Action                                                 | Default
+:---------------------- | :----------------------------------------------------- | :------------------------
+`noscript`              | Renders default noscript code provided by google       | `false`
+`public_key`            | Sets key to the `data-sitekey` reCaptcha div attribute | Public key from the config file
 
-```elixir
-...
-<%= raw Recaptcha.display(noscript: true, public_key: "Public key") %>
-...
-```
+
 
 ### Controller
 
-In a controller
+Recaptcha provides `verify` method, that can be used like this:
 
 ```elixir
-
 def create(conn, params) do
   # some code  
   case Recaptcha.verify(conn.remote_ip, params["g-recaptcha-response"]) do
@@ -91,10 +74,19 @@ def create(conn, params) do
     :error -> handle_error
   end
 end
-
 ```
 
-`verify` method also accepts a keyword list as the third parameter with also 2 possible options:
+`verify` method sends a `POST` request to the reCAPTCHA API and returns 2 possible values:
 
-* `public_key` -> A key to use in the http request to the recaptcha api, default is the private key set in the config file
-* `timeout` -> Time period in ms to wait for a response from google api, default is 3000
+`:ok` -> captcha is valid
+
+`:error` -> server returned `missing-input-response` or `invalid-input-response` error codes
+
+If the server returns `missing-input-secret` or `invalid-input-secret`, `RuntimeError` is raised
+
+`verify` method also accepts a keyword list as the third parameter with the following options:
+
+Option                  | Action                                                 | Default
+:---------------------- | :----------------------------------------------------- | :------------------------
+`timeout`               | Time to wait before timeout                            | 3000 (ms)
+`private_key`           | Private key to send as a parameter of the API request  | Private key from the config file
