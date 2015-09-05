@@ -5,16 +5,36 @@ defmodule Recaptcha do
 
   EEx.function_from_file :defp, :render_template, "lib/template.html.eex", [:assigns]
 
+  @doc """
+  Returns a string with reCAPTCHA code
+
+  To convert the string to html code, use Phoenix.HTML.Raw/1 method
+  """
   def display(options \\ []) do
     public_key = options[:public_key] || config.public_key
     render_template(public_key: public_key, options: options)
   end
 
+  @doc """
+  Verifies reCAPTCHA response string.
+
+  The function returns :ok or :error, depending on the verification's result
+
+  :ok is returned when the response code was successfully verified
+
+  :error is returned when the response is nil or if the reCAPTCHA server returned
+  a missing-input-response or invalid-input-response code
+
+  The function raises RuntimeError if the server returned a missing-input-secret or invalid-input-secret
+  code
+  """
   def verify(remote_ip, response, options \\ [])
 
   def verify(remote_ip, response, options) when is_tuple(remote_ip) do
     verify(:inet_parse.ntoa(remote_ip), response, options)
   end
+
+  def verify(remote_ip, nil = response, options), do: :error
 
   def verify(remote_ip, response, options) do
     case api_response(remote_ip, response, options)  do
