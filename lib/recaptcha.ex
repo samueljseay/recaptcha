@@ -34,7 +34,7 @@ defmodule Recaptcha do
     verify(:inet_parse.ntoa(remote_ip), response, options)
   end
 
-  def verify(remote_ip, nil = response, options), do: :error
+  def verify(_remote_ip, nil = _response, _options), do: :error
 
   def verify(remote_ip, response, options) do
     case api_response(remote_ip, response, options)  do
