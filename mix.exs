@@ -3,8 +3,8 @@ defmodule Recaptcha.Mixfile do
 
   def project do
     [app: :recaptcha,
-     version: "1.0.1",
-     elixir: "~> 1.0.0",
+     version: "1.0.2",
+     elixir: "~> 1.0",
      description: description,
      deps: deps,
      package: package]
@@ -30,7 +30,7 @@ defmodule Recaptcha.Mixfile do
 
   defp package do
     [files: ["lib", "mix.exs", "README.md", "LICENSE"],
-     contributors: ["Alekseev Mikhail"],
+     maintainers: ["Alekseev Mikhail"],
      licenses: ["MIT"],
      links: %{"GitHub" => "https://github.com/JustMikey/recaptcha"}]
   end
