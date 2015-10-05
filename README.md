@@ -88,7 +88,7 @@ If the server returns `missing-input-secret` or `invalid-input-secret`, `Runtime
 
 Option                  | Action                                                 | Default
 :---------------------- | :----------------------------------------------------- | :------------------------
-`timeout`               | Time to wait before timeout                            | 3000 (ms)
+`timeout`               | Time to wait before timeout                            | 5000 (ms)
 `private_key`           | Private key to send as a parameter of the API request  | Private key from the config file
 
 ## Contributing
