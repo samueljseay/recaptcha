@@ -49,13 +49,14 @@ defmodule Recaptcha do
 
   defp api_response(remote_ip, response, options) do
     private_key = options[:private_key] || config.private_key
-    timeout = options[:timeout] || 3000
+    timeout = options[:timeout] || 5000
     body_content = URI.encode_query(%{"remoteip"  => to_string(remote_ip),
                                       "response"  => response,
                                       "secret" => private_key})
-    headers = ["Content-type": "application/x-www-form-urlencoded"]
-    options = [body: body_content, headers: headers, timeout: timeout]
-    HTTPotion.post(config.verify_url, options).body |> Poison.decode!
+    headers = [{"Content-type", "application/x-www-form-urlencoded"}, {"Accept", "application/json"}]    
+
+    HTTPoison.post!(config.verify_url, body_content, headers, timeout: timeout).body
+    |> Poison.decode!
   end
 
   defp config do

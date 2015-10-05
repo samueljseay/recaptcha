@@ -3,7 +3,7 @@ defmodule Recaptcha.Mixfile do
 
   def project do
     [app: :recaptcha,
-     version: "1.0.2",
+     version: "1.1.0",
      elixir: "~> 1.0",
      description: description,
      deps: deps,
@@ -11,7 +11,7 @@ defmodule Recaptcha.Mixfile do
   end
 
   def application do
-    [applications: [:logger, :httpotion]]
+    [applications: [:logger, :httpoison]]
   end
 
   defp description do
@@ -22,8 +22,7 @@ defmodule Recaptcha.Mixfile do
 
   defp deps do
     [
-      {:ibrowse, github: "cmullaparthi/ibrowse", tag: "v4.1.2"},
-      {:httpotion, "~> 2.1.0"},
+      {:httpoison, "0.7.2"},
       {:poison, "~> 1.5"}
     ]
   end

@@ -12,8 +12,7 @@ A simple Elixir package for implementing [reCAPTCHA] in [Phoenix] applications.
 ```elixir
   defp deps do
     [
-      {:recaptcha, "~> 1.0.0"},
-      {:ibrowse, github: "cmullaparthi/ibrowse", tag: "v4.1.2"}
+      {:recaptcha, "~> 1.1.0"},      
     ]
   end
 ```
