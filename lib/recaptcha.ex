@@ -5,7 +5,6 @@ defmodule Recaptcha do
   Simple Google reCAPTCHA plugin for Phoenix applications. 
   """
 
-  @config Application.get_env(:recaptcha, :api_config)
   @script_src "https://www.google.com/recaptcha/api.js"
 
   @spec render_script(map | Keyword.t) :: {:safe, String.t}
@@ -63,7 +62,7 @@ defmodule Recaptcha do
   More detailed info can be found on the official site - https://developers.google.com/recaptcha/docs/display#render_param
   """
   def render_widget(options \\ []) do
-    options = Keyword.put_new(options, :sitekey, @config.public_key)
+    options = Keyword.put_new(options, :sitekey, config.public_key)
     {:safe, do_render_widget(options: options)}
   end
 
@@ -87,7 +86,7 @@ defmodule Recaptcha do
   More detailed info can be found on the official site - https://developers.google.com/recaptcha/docs/verify#api-response
   """
   def verify(response, options \\ []) do
-    private_key = Keyword.get(options, :private_key, @config.private_key)
+    private_key = Keyword.get(options, :private_key, config.private_key)
     timeout = Keyword.get(options, :timeout, 5000)
     url = "https://www.google.com/recaptcha/api/siteverify"
     body = request_body(private_key, response, stringify_ip_address(options[:remote_ip]))
@@ -129,5 +128,9 @@ defmodule Recaptcha do
 
   defp do_render_script(src) do
     {:safe, "<script src='#{src}' async defer></script>"}
+  end
+
+  def config do
+    Application.get_env(:recaptcha, :api_config)
   end
 end
