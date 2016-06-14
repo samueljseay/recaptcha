@@ -3,8 +3,8 @@ defmodule Recaptcha.Mixfile do
 
   def project do
     [app: :recaptcha,
-     version: "1.1.1",
-     elixir: "~> 1.0",
+     version: "2.0.0-rc.0",
+     elixir: "~> 1.2",
      description: description,
      deps: deps,
      package: package]
@@ -16,14 +16,15 @@ defmodule Recaptcha.Mixfile do
 
   defp description do
     """
-    A simple reCaptcha package for Phoenix applications.
+    A simple reCaptcha plugin for Phoenix applications.
     """
   end
 
   defp deps do
     [
-      {:httpoison, "~> 0.7"},
-      {:poison, "~> 1.5"}
+      {:httpoison, "~> 0.8"},
+      {:poison, "~> 2.1"},
+      {:dialyxir, "~> 0.3", only: [:dev]}
     ]
   end
 

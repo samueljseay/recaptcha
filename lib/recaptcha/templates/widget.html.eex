@@ -1,11 +1,11 @@
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>
-
-<div class="g-recaptcha"
-    data-sitekey="<%= @public_key %>"
-    data-theme="<%= @options[:theme]%>"
-    data-type="<%= @options[:type]%>"
-    data-tabindex="<%= @options[:tabindex]%>"
-    data-size="<%= @options[:size]%>">
+<div class="g-recaptcha" 
+    data-sitekey='<%= @options[:sitekey] %>'
+    data-theme='<%= @options[:theme] %>'
+    data-type='<%= @options[:type] %>'
+    data-size='<%= @options[:size] %>'
+    data-tabindex='<%= @options[:tabindex] %>'
+    data-callback='<%= @options[:callback] %>'
+    data-expired-callback='<%= @options[:expired_callback] %>'>
 </div>
 
 <%= if @options[:noscript] do %>
@@ -14,7 +14,7 @@
     <div style="width: 302px; height: 422px;">
       <div style="width: 302px; height: 422px; position: relative;">
         <div style="width: 302px; height: 422px; position: absolute;">
-          <iframe src="https://www.google.com/recaptcha/api/fallback?k=<%= @public_key %>"
+          <iframe src="https://www.google.com/recaptcha/api/fallback?k=<%= @options[:sitekey] %>"
                        frameborder="0" scrolling="no"
                        style="width: 302px; height:422px; border-style: none;">
           </iframe>

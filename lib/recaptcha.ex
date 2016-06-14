@@ -1,75 +1,133 @@
 defmodule Recaptcha do
   require Elixir.EEx
 
-  @secret_key_errors ~w(missing-input-secret invalid-input-secret)
+  @moduledoc """
+  Simple Google reCAPTCHA plugin for Phoenix applications. 
+  """
 
-  EEx.function_from_file :defp, :render_template, "lib/template.html.eex", [:assigns]
+  @config Application.get_env(:recaptcha, :api_config)
+  @script_src "https://www.google.com/recaptcha/api.js"
+
+  @spec render_script(map | Keyword.t) :: {:safe, String.t}
 
   @doc """
-  Returns a string with reCAPTCHA code
+  Renders reCAPTCHA script tag.
 
-  To convert the string to html code, use Phoenix.HTML.Raw/1 method
+  Accepts parameters map or a keyword list that will be appended to
+  the url. 
+
+  Available parameters are:
+
+    * `onload` - The name of your callback function to be executed once all the dependencies have loaded.
+
+    * `render` - Whether to render the widget explicitly. 
+      Defaults to onload, which will render the widget in the first g-recaptcha tag it finds.
+
+    * `hl` - Forces the widget to render in a specific language. Auto-detects the user's language if unspecified.
+
+  More detailed info can be found on the official site - https://developers.google.com/recaptcha/docs/display#js_param
   """
-  def display(options \\ []) do
-    public_key = options[:public_key] || config.public_key
-    render_template(public_key: public_key, options: options)
+  def render_script(query) when is_map(query) or is_list(query) do
+    script_src = @script_src <> "?" <> URI.encode_query(query)
+    do_render_script(script_src)
   end
+
+  def render_script do
+    do_render_script(@script_src)
+  end
+
+  @spec render_widget(Keyword.t) :: {:safe, String.t}
 
   @doc """
-  Verifies reCAPTCHA response string.
+  Renders reCAPTCHA widget.
 
-  The function returns :ok or :error, depending on the verification's result
+  Available options: 
 
-  :ok is returned when the response code was successfully verified
+    * `sitekey` - Your sitekey. Defaults to the public key from the config.
 
-  :error is returned when the response is nil or if the reCAPTCHA server returned
-  a missing-input-response or invalid-input-response code
+    * `theme` - The color theme of the widget.
 
-  The function raises RuntimeError if the server returned a missing-input-secret or invalid-input-secret
-  code
+    * `type` - The type of CAPTCHA to serve.
+
+    * `size` - The size of the widget.
+
+    * `tabindex` - The tabindex of the widget and challenge.
+
+    * `callback` - The name of your callback function to be executed when the user submits a successful CAPTCHA response.
+
+    * `expired_callback` - The name of your callback function to be executed when the recaptcha 
+      response expires and the user needs to solve a new CAPTCHA.
+
+    * `noscript` - Whether to render or not the noscript content. Defaults to `false`.
+
+  More detailed info can be found on the official site - https://developers.google.com/recaptcha/docs/display#render_param
   """
-  def verify(remote_ip, response, options \\ [])
-
-  def verify(remote_ip, response, options) when is_tuple(remote_ip) do
-    verify(:inet_parse.ntoa(remote_ip), response, options)
+  def render_widget(options \\ []) do
+    options = Keyword.put_new(options, :sitekey, @config.public_key)
+    {:safe, do_render_widget(options: options)}
   end
 
-  def verify(_remote_ip, nil = _response, _options), do: :error
+  @spec verify(String.t, Keyword.t) :: map
 
-  def verify(remote_ip, response, options) do
-    case api_response(remote_ip, response, options)  do
-      %{"success" => true} ->
-        :ok
-      %{"success" => false, "error-codes" => error_codes} ->
-        handle_error_codes(error_codes)
-      %{"success" => false} ->
-        :error
-    end
+  @doc """
+  Verifies reCAPTCHA response. 
+  
+  Accepts two parameters, response to verify and options.
+
+  Available options are:
+
+    * `private_key` - Private key to use for verification. Defaults to the private key from the config.
+
+    * `timeout` - Number of milliseconds until timeout. Defaults to `5000`.
+
+    * `remote_ip` - The user's IP address. Defaults to `nil`
+  
+  Returns a map of the json response returned by the reCAPTCHA server.
+
+  More detailed info can be found on the official site - https://developers.google.com/recaptcha/docs/verify#api-response
+  """
+  def verify(response, options \\ []) do
+    private_key = Keyword.get(options, :private_key, @config.private_key)
+    timeout = Keyword.get(options, :timeout, 5000)
+    url = "https://www.google.com/recaptcha/api/siteverify"
+    body = request_body(private_key, response, stringify_ip_address(options[:remote_ip]))
+    headers = request_headers()
+
+    HTTPoison.post!(url, body, headers, timeout: timeout).body |> Poison.decode!
   end
 
-  defp api_response(remote_ip, response, options) do
-    private_key = options[:private_key] || config.private_key
-    timeout = options[:timeout] || 5000
-    body_content = URI.encode_query(%{"remoteip"  => to_string(remote_ip),
-                                      "response"  => response,
-                                      "secret" => private_key})
-    headers = [{"Content-type", "application/x-www-form-urlencoded"}, {"Accept", "application/json"}]    
+  @spec request_body(String.t, String.t, String.t | nil) :: String.t
 
-    HTTPoison.post!(config.verify_url, body_content, headers, timeout: timeout).body
-    |> Poison.decode!
+  defp request_body(secret, response, remote_ip) do
+    %{"secret" => secret, "response" => response}
+    |> (&(if remote_ip, do: Map.put(&1, "remoteip", remote_ip), else: &1)).()
+    |> URI.encode_query()
   end
 
-  defp config do
-    Application.get_env(:recaptcha, :api_config)
+  @spec request_headers() :: [{}]
+
+  defp request_headers do
+    [
+      {"Content-type", "application/x-www-form-urlencoded"}, 
+      {"Accept", "application/json"}
+    ]
   end
 
-  defp handle_error_codes(error_codes) do
-    if Enum.any?(error_codes, fn(code) -> Enum.member?(@secret_key_errors, code) end) do
-      raise RuntimeError,
-        message: "reCaptcha API has declined the private key. Please make sure you've set the correct private key"
-    else
-      :error
-    end
+  @spec stringify_ip_address(nil | tuple | String.t) :: nil | String.t
+
+  defp stringify_ip_address(nil), do: nil
+
+  defp stringify_ip_address(ip_address) when is_tuple(ip_address) do
+    ip_address
+    |> :inet_parse.ntoa()
+    |> to_string()
   end
 
+  defp stringify_ip_address(ip_address) when is_binary(ip_address), do: ip_address
+
+  EEx.function_from_file :defp, :do_render_widget, "lib/recaptcha/templates/widget.html.eex", [:assigns]
+
+  defp do_render_script(src) do
+    {:safe, "<script src='#{src}' async defer></script>"}
+  end
 end
