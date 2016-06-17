@@ -66,7 +66,7 @@ defmodule Recaptcha do
     {:safe, do_render_widget(options: options)}
   end
 
-  @spec verify(String.t, Keyword.t) :: map
+  @spec verify(String.t, Keyword.t) :: {:ok, map} | {:error, map}
 
   @doc """
   Verifies reCAPTCHA response. 
@@ -92,7 +92,16 @@ defmodule Recaptcha do
     body = request_body(private_key, response, stringify_ip_address(options[:remote_ip]))
     headers = request_headers()
 
-    HTTPoison.post!(url, body, headers, timeout: timeout).body |> Poison.decode!
+    HTTPoison.post!(url, body, headers, timeout: timeout).body 
+    |> Poison.decode!
+    |> Enum.map(fn({k,v}) -> {string_to_atom(k), v} end)
+    |> Enum.into(%{})
+    |> Map.update!(:error_codes, fn(x) -> Enum.map(x, &(string_to_atom(&1))) end)
+    |> Map.pop(:success)
+    |> case do
+      {true, response} -> {:ok, response}
+      {false, response} -> {:error, response}
+    end
   end
 
   @spec request_body(String.t, String.t, String.t | nil) :: String.t
@@ -123,6 +132,12 @@ defmodule Recaptcha do
   end
 
   defp stringify_ip_address(ip_address) when is_binary(ip_address), do: ip_address
+
+  @spec string_to_atom(String.t) :: atom
+
+  defp string_to_atom(string) do
+    String.to_atom(String.replace(string, "-", "_"))
+  end
 
   EEx.function_from_file :defp, :do_render_widget, "lib/recaptcha/templates/widget.html.eex", [:assigns]
 
