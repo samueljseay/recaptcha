@@ -96,7 +96,7 @@ defmodule Recaptcha do
     |> Poison.decode!
     |> Enum.map(fn({k,v}) -> {string_to_atom(k), v} end)
     |> Enum.into(%{})
-    |> Map.update!(:error_codes, fn(x) -> Enum.map(x, &(string_to_atom(&1))) end)
+    |> Map.update(:error_codes, [], fn(x) -> Enum.map(x, &(string_to_atom(&1))) end)
     |> Map.pop(:success)
     |> case do
       {true, response} -> {:ok, response}
