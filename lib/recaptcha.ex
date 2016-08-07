@@ -1,13 +1,9 @@
 defmodule Recaptcha do
-  require Elixir.EEx
-
   @moduledoc """
   Simple Google reCAPTCHA plugin for Phoenix applications. 
   """
 
-  @script_src "https://www.google.com/recaptcha/api.js"
-
-  @spec render_script(map | Keyword.t) :: {:safe, String.t}
+  require Elixir.EEx
 
   @doc """
   Renders reCAPTCHA script tag.
@@ -26,7 +22,13 @@ defmodule Recaptcha do
 
   More detailed info can be found on the official site - https://developers.google.com/recaptcha/docs/display#js_param
   """
-  def render_script(query) when is_map(query) or is_list(query) do
+
+  @script_src "https://www.google.com/recaptcha/api.js"
+
+  @spec render_script() :: {:safe, String.t}
+  @spec render_script(Keyword.t) :: {:safe, String.t}
+
+  def render_script(query) when is_list(query) do
     script_src = @script_src <> "?" <> URI.encode_query(query)
     do_render_script(script_src)
   end
@@ -34,8 +36,6 @@ defmodule Recaptcha do
   def render_script do
     do_render_script(@script_src)
   end
-
-  @spec render_widget(Keyword.t) :: {:safe, String.t}
 
   @doc """
   Renders reCAPTCHA widget.
@@ -61,12 +61,14 @@ defmodule Recaptcha do
 
   More detailed info can be found on the official site - https://developers.google.com/recaptcha/docs/display#render_param
   """
+
+  @spec render_widget(Keyword.t) :: {:safe, String.t}
+
   def render_widget(options \\ []) do
     options = Keyword.put_new(options, :sitekey, config.public_key)
+
     {:safe, do_render_widget(options: options)}
   end
-
-  @spec verify(String.t, Keyword.t) :: {:ok, map} | {:error, map}
 
   @doc """
   Verifies reCAPTCHA response. 
@@ -85,6 +87,9 @@ defmodule Recaptcha do
 
   More detailed info can be found on the official site - https://developers.google.com/recaptcha/docs/verify#api-response
   """
+
+  @spec verify(String.t, Keyword.t) :: {:ok, map} | {:error, map}
+
   def verify(response, options \\ []) do
     private_key = Keyword.get(options, :private_key, config.private_key)
     timeout = Keyword.get(options, :timeout, 5000)
@@ -94,9 +99,9 @@ defmodule Recaptcha do
 
     HTTPoison.post!(url, body, headers, timeout: timeout).body 
     |> Poison.decode!
-    |> Enum.map(fn({k,v}) -> {string_to_atom(k), v} end)
+    |> Enum.map(fn({k,v}) -> {atomify(k), v} end)
     |> Enum.into(%{})
-    |> Map.update(:error_codes, [], fn(x) -> Enum.map(x, &(string_to_atom(&1))) end)
+    |> Map.update(:error_codes, [], fn(x) -> Enum.map(x, &(atomify(&1))) end)
     |> Map.pop(:success)
     |> case do
       {true, response} -> {:ok, response}
@@ -112,7 +117,7 @@ defmodule Recaptcha do
     |> URI.encode_query()
   end
 
-  @spec request_headers() :: [{}]
+  @spec request_headers() :: [{String.t, String.t}]
 
   defp request_headers do
     [
@@ -121,7 +126,8 @@ defmodule Recaptcha do
     ]
   end
 
-  @spec stringify_ip_address(nil | tuple | String.t) :: nil | String.t
+  @spec stringify_ip_address(nil) :: nil
+  @spec stringify_ip_address(tuple | String.t) :: String.t
 
   defp stringify_ip_address(nil), do: nil
 
@@ -133,19 +139,25 @@ defmodule Recaptcha do
 
   defp stringify_ip_address(ip_address) when is_binary(ip_address), do: ip_address
 
-  @spec string_to_atom(String.t) :: atom
+  @spec atomify(String.t) :: atom
 
-  defp string_to_atom(string) do
-    String.to_atom(String.replace(string, "-", "_"))
+  defp atomify(string) do
+    string
+    |> String.replace("-", "_")
+    |> String.to_atom()
   end
 
   EEx.function_from_file :defp, :do_render_widget, "lib/recaptcha/templates/widget.html.eex", [:assigns]
+
+  @spec do_render_script(String.t) :: {:safe, String.t}
 
   defp do_render_script(src) do
     {:safe, "<script src='#{src}' async defer></script>"}
   end
 
-  def config do
+  @spec config :: %{public_key: String.t, private_key: String.t}
+
+  defp config do
     Application.get_env(:recaptcha, :api_config)
   end
 end
