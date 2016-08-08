@@ -1,3 +1,8 @@
+#### elixir ####
 /_build
-erl_crash.dump
+/cover
 /deps
+erl_crash.dump
+*.ez
+/doc
+/cover
