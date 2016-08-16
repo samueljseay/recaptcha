@@ -1,6 +1,6 @@
 defmodule Recaptcha do
   @moduledoc """
-  Simple Google reCAPTCHA plugin for Phoenix applications. 
+  Simple Google reCAPTCHA plugin for Phoenix applications.
   """
 
   require Elixir.EEx
@@ -9,13 +9,13 @@ defmodule Recaptcha do
   Renders reCAPTCHA script tag.
 
   Accepts parameters map or a keyword list that will be appended to
-  the url. 
+  the url.
 
   Available parameters are:
 
     * `onload` - The name of your callback function to be executed once all the dependencies have loaded.
 
-    * `render` - Whether to render the widget explicitly. 
+    * `render` - Whether to render the widget explicitly.
       Defaults to onload, which will render the widget in the first g-recaptcha tag it finds.
 
     * `hl` - Forces the widget to render in a specific language. Auto-detects the user's language if unspecified.
@@ -24,13 +24,14 @@ defmodule Recaptcha do
   """
 
   @script_src "https://www.google.com/recaptcha/api.js"
+  @site_verify_url "https://www.google.com/recaptcha/api/siteverify"
 
   @spec render_script() :: {:safe, String.t}
   @spec render_script(Keyword.t) :: {:safe, String.t}
 
   def render_script(query) when is_list(query) do
-    script_src = @script_src <> "?" <> URI.encode_query(query)
-    do_render_script(script_src)
+    URI.merge(@script_src, "?" <> URI.encode_query(query))
+    |> do_render_script()
   end
 
   def render_script do
@@ -40,7 +41,7 @@ defmodule Recaptcha do
   @doc """
   Renders reCAPTCHA widget.
 
-  Available options: 
+  Available options:
 
     * `sitekey` - Your sitekey. Defaults to the public key from the config.
 
@@ -54,7 +55,7 @@ defmodule Recaptcha do
 
     * `callback` - The name of your callback function to be executed when the user submits a successful CAPTCHA response.
 
-    * `expired_callback` - The name of your callback function to be executed when the recaptcha 
+    * `expired_callback` - The name of your callback function to be executed when the recaptcha
       response expires and the user needs to solve a new CAPTCHA.
 
     * `noscript` - Whether to render or not the noscript content. Defaults to `false`.
@@ -65,14 +66,14 @@ defmodule Recaptcha do
   @spec render_widget(Keyword.t) :: {:safe, String.t}
 
   def render_widget(options \\ []) do
-    options = Keyword.put_new(options, :sitekey, config.public_key)
+    options = Keyword.put_new(options, :sitekey, config(:public_key))
 
     {:safe, do_render_widget(options: options)}
   end
 
   @doc """
-  Verifies reCAPTCHA response. 
-  
+  Verifies reCAPTCHA response.
+
   Accepts two parameters, response to verify and options.
 
   Available options are:
@@ -82,7 +83,7 @@ defmodule Recaptcha do
     * `timeout` - Number of milliseconds until timeout. Defaults to `5000`.
 
     * `remote_ip` - The user's IP address. Defaults to `nil`
-  
+
   Returns a map of the json response returned by the reCAPTCHA server.
 
   More detailed info can be found on the official site - https://developers.google.com/recaptcha/docs/verify#api-response
@@ -91,13 +92,12 @@ defmodule Recaptcha do
   @spec verify(String.t, Keyword.t) :: {:ok, map} | {:error, map}
 
   def verify(response, options \\ []) do
-    private_key = Keyword.get(options, :private_key, config.private_key)
+    private_key = Keyword.get(options, :private_key, config(:private_key))
     timeout = Keyword.get(options, :timeout, 5000)
-    url = "https://www.google.com/recaptcha/api/siteverify"
     body = request_body(private_key, response, stringify_ip_address(options[:remote_ip]))
     headers = request_headers()
 
-    HTTPoison.post!(url, body, headers, timeout: timeout).body 
+    HTTPoison.post!(@site_verify_url, body, headers, timeout: timeout).body
     |> Poison.decode!
     |> Enum.map(fn({k,v}) -> {atomify(k), v} end)
     |> Enum.into(%{})
@@ -121,7 +121,7 @@ defmodule Recaptcha do
 
   defp request_headers do
     [
-      {"Content-type", "application/x-www-form-urlencoded"}, 
+      {"Content-type", "application/x-www-form-urlencoded"},
       {"Accept", "application/json"}
     ]
   end
@@ -155,9 +155,15 @@ defmodule Recaptcha do
     {:safe, "<script src='#{src}' async defer></script>"}
   end
 
-  @spec config :: %{public_key: String.t, private_key: String.t}
+  @spec config :: [public_key: String.t, private_key: String.t]
 
   defp config do
-    Application.get_env(:recaptcha, :api_config)
+    Application.get_all_env(:recaptcha)
+  end
+
+  @spec config(Atom.t) :: String.t
+
+  defp config(key) do
+    config() |> Keyword.get(key)
   end
 end
