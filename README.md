@@ -1,9 +1,8 @@
 # Recaptcha
 
-A simple Elixir package for implementing [reCAPTCHA] in [Phoenix] applications.
+A simple Elixir package for implementing [reCAPTCHA] in [Elixir] applications.
 
 [reCAPTCHA]: http://www.google.com/recaptcha
-[Phoenix]: http://www.phoenixframework.org/
 
 ## Installation
 
@@ -12,7 +11,7 @@ A simple Elixir package for implementing [reCAPTCHA] in [Phoenix] applications.
 ```elixir
   defp deps do
     [
-      {:recaptcha, "~> 1.1.0"},      
+      {:recaptcha, "~> 2.0"},      
     ]
   end
 ```
@@ -21,7 +20,7 @@ A simple Elixir package for implementing [reCAPTCHA] in [Phoenix] applications.
 
 ```elixir
   def application do
-    [ applications: [:phoenix, :recaptcha] ]
+    [ applications: [:recaptcha] ]
   end
 ```
 
@@ -29,20 +28,20 @@ A simple Elixir package for implementing [reCAPTCHA] in [Phoenix] applications.
 
 ## Config
 
-Set default public and private keys in your application's config.exs
+By default the public and private keys are loaded via the RECAPTCHA_PUBLIC_KEY and RECAPTCHA_PRIVATE_KEY environment variables.
+Part of the reason for doing this is to encourage best practice (specifically not committing your recaptcha private key to your code base). You can of course override them in your own config any way that you like.
 
 ```elixir
   config :recaptcha,
-    api_config: %{ verify_url: "https://www.google.com/recaptcha/api/siteverify",
-                 public_key: "YOUR_PUBLIC_KEY",
-                 private_key: "YOUR_PRIVATE_KEY" }
+    public_key: System.get_env("RECAPTCHA_PUBLIC_KEY"),
+    private_key: System.get_env("RECAPTCHA_PRIVATE_KEY")
 ```
 
 ## Usage
 
-### View
+### Render the Widget
 
-Use `raw` and `Recaptcha.display` methods to render the captcha
+Use `raw` (if you're using Phoenix.HTML) and `Recaptcha.Template.display/1` methods to render the captcha widget.
 
 ```html
 <form name="someform" method="post" action="/somewhere">
@@ -60,36 +59,33 @@ Option                  | Action                                                
 `public_key`            | Sets key to the `data-sitekey` reCaptcha div attribute | Public key from the config file
 
 
+### Verify API
 
-### Controller
-
-Recaptcha provides `verify` method, that can be used like this:
+Recaptcha provides the `verify/2` method, that can be used like this:
 
 ```elixir
   def create(conn, params) do
     # some code  
-    case Recaptcha.verify(conn.remote_ip, params["g-recaptcha-response"]) do
-      :ok -> do_something
-      :error -> handle_error
+    case Recaptcha.verify(params["g-recaptcha-response"]) do
+      {:ok, response} -> do_something
+      {:error, errors} -> handle_error
     end
   end
 ```
 
 `verify` method sends a `POST` request to the reCAPTCHA API and returns 2 possible values:
 
-`:ok` -> The captcha is valid
+`{:ok, %{challenge_ts: timestamp, hostname: host}}` -> The captcha is valid, see the [documentation](https://developers.google.com/recaptcha/docs/verify#api-response) for more details.
 
-`:error` -> Server returned `missing-input-response` or `invalid-input-response` error codes
-
-If the server returns `missing-input-secret` or `invalid-input-secret`, `RuntimeError` is raised
-
+`{:error, errors}` -> Any possible errors will be available in `errors`, See the [error documentation](https://developers.google.com/recaptcha/docs/verify#error-code-reference) for more details.
 
 `verify` method also accepts a keyword list as the third parameter with the following options:
 
 Option                  | Action                                                 | Default
 :---------------------- | :----------------------------------------------------- | :------------------------
 `timeout`               | Time to wait before timeout                            | 5000 (ms)
-`private_key`           | Private key to send as a parameter of the API request  | Private key from the config file
+`secret`                | Private key to send as a parameter of the API request  | Private key from the config file
+`remote_ip`             | Optional. The user's IP address, used by reCaptcha     | no default
 
 ## Contributing
 
