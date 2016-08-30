@@ -2,10 +2,10 @@
 
 <div class="g-recaptcha"
     data-sitekey="<%= @public_key %>"
-    data-theme="<%= @options[:theme]%>"
-    data-type="<%= @options[:type]%>"
-    data-tabindex="<%= @options[:tabindex]%>"
-    data-size="<%= @options[:size]%>">
+    data-theme="<%= @options[:theme] %>"
+    data-type="<%= @options[:type] %>"
+    data-tabindex="<%= @options[:tabindex] %>"
+    data-size="<%= @options[:size] %>">
 </div>
 
 <%= if @options[:noscript] do %>
