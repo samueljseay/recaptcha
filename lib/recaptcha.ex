@@ -1,41 +1,49 @@
 defmodule Recaptcha do
+  @moduledoc """
+    A module for verifying reCAPTCHA version 2.0 response strings.
 
-  @headers [{"Content-type", "application/x-www-form-urlencoded"}, {"Accept", "application/json"}]
+    See the [documentation](https://developers.google.com/recaptcha/docs/verify) for more details.
+  """
+  @secret Application.get_env(:recaptcha, :secret)
+  @http_client Application.get_env(:recaptcha, :http_client, Recaptcha.Http)
 
-  @url Application.get_env(:recaptcha, :verify_url)
-  @timeout Application.get_env(:recaptcha, :timeout, 5000)
+  @doc """
+  Verifies a reCAPTCHA response string.
 
-  def verify(response, options \\ []) do
-    case make_request(response, options) do
+  ## Options
+
+    * `:timeout` - the timeout for the request (defaults to 5000ms)
+    * `:secret`  - the secret key used by recaptcha (defaults to the secret provided in application config)
+    * `:remote_ip` - the IP address of the user (optional and not set by default)
+
+  ## Example
+
+    {:ok, api_response} = Recaptcha.verify("response_string")
+  """
+  @spec verify(String.t, [timeout: integer, secret: String.t, remote_ip: String.t]) :: {:ok, map} | {:error, [String.t]}
+  def verify(response, options \\ [])
+
+  def verify(nil = _response, _) do
+    {:error, ["invalid-input-response"]}
+  end
+
+  def verify(response, options) do
+    case @http_client.request_verification(request_body(response, options), Keyword.take(options, [:timeout])) do
       %{"success" => false, "error-codes" => errors} -> {:error, errors}
       %{"success" => true, "challenge_ts" => timestamp, "hostname" => host} -> {:ok, %{challenge_ts: timestamp, hostname: host}}
     end
   end
 
-  defp make_request(response, options) do
-    HTTPoison.post!(@url, request_body(response, options), @headers, timeout: options[:timeout] || @timeout).body
-    |> Poison.decode!
-  end
-
   @doc false
   def request_body(response, options) do
-    # valid options are remote_ip, secret
-    options_map =
-      options
-      |> Enum.into(%{})
+    body_options = Keyword.take(options, [:remote_ip, :secret])
+    application_options = [secret: @secret]
 
-    # override application config with options if they exist
-    config
-    |> Map.merge(options_map)
-    |> Map.put(:response, response)
+    # override application secret with options secret if it exists
+    application_options
+    |> Keyword.merge(body_options)
+    |> Keyword.put(:response, response)
+    |> Enum.into(%{})
     |> URI.encode_query
-  end
-
-  defp config do
-    case Application.get_env(:recaptcha, :private_key) do
-      nil -> %{}
-      "" -> %{}
-      key -> %{secret: key}
-    end
   end
 end
