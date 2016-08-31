@@ -16,7 +16,7 @@ defmodule RecaptchaTemplateTest do
     assert template_string =~ "data-sitekey=\"override_test_public_key\""
   end
 
-  test "suppling noscript option displays the noscript fallback" do
+  test "supplying noscript option displays the noscript fallback" do
     template_string = Recaptcha.Template.display(noscript: true)
 
     assert template_string =~ "<noscript>"
