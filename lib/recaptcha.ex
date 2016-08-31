@@ -20,17 +20,18 @@ defmodule Recaptcha do
 
     {:ok, api_response} = Recaptcha.verify("response_string")
   """
-  @spec verify(String.t, [timeout: integer, secret: String.t, remote_ip: String.t]) :: {:ok, Recaptcha.Response.t} | {:error, [String.t]}
+  @spec verify(String.t, [timeout: integer, secret: String.t, remote_ip: String.t]) :: {:ok, Recaptcha.Response.t} | {:error, [atom]}
   def verify(response, options \\ [])
 
   def verify(nil = _response, _) do
-    {:error, ["invalid-input-response"]}
+    {:error, [:invalid_input_response]}
   end
 
   def verify(response, options) do
     case @http_client.request_verification(request_body(response, options), Keyword.take(options, [:timeout])) do
-      %{"success" => false, "error-codes" => errors} -> {:error, errors}
-      %{"success" => true, "challenge_ts" => timestamp, "hostname" => host} -> {:ok, %Recaptcha.Response{challenge_ts: timestamp, hostname: host}}
+      {:error, errors} -> {:error, errors}
+      {:ok, %{"success" => false, "error-codes" => errors}} -> {:error, Enum.map(errors, fn(error) -> atomise_api_error(error) end) }
+      {:ok, %{"success" => true, "challenge_ts" => timestamp, "hostname" => host}} -> {:ok, %Recaptcha.Response{challenge_ts: timestamp, hostname: host}}
     end
   end
 
@@ -43,5 +44,10 @@ defmodule Recaptcha do
     |> Keyword.merge(body_options)
     |> Keyword.put(:response, response)
     |> URI.encode_query
+  end
+
+  defp atomise_api_error(error) do
+    String.replace(error, "-", "_")
+    |> String.to_atom
   end
 end

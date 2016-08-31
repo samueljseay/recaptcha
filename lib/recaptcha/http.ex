@@ -17,15 +17,21 @@ defmodule Recaptcha.Http do
 
   ## Example
 
-    %{ "success" => success,
-       "challenge_ts" => ts,
-       "hostname" => host,
-       "error-codes" => errors
-     } = Recaptcha.Http.request_verification(%{ secret: "secret", response: "response", remote_ip: "remote_ip"})
+    {:ok, %{ "success" => success, "challenge_ts" => ts, "hostname" => host, "error-codes" => errors}} = Recaptcha.Http.request_verification(%{ secret: "secret", response: "response", remote_ip: "remote_ip"})
   """
-  @spec request_verification(map, [timeout: integer]) :: map
+  @spec request_verification(map, [timeout: integer]) :: {:ok, map} | {:error, [atom]}
   def request_verification(body, options \\ []) do
-    HTTPoison.post!(@url, body, @headers, timeout: options[:timeout] || @timeout).body
-    |> Poison.decode!
+    result =
+      with {:ok, response} <- HTTPoison.post(@url, body, @headers, timeout: options[:timeout] || @timeout),
+           {:ok, data} <- Poison.decode(response.body) do
+        {:ok, data}
+      end
+
+    case result do
+      {:ok, data} -> {:ok, data}
+      {:error, :invalid} -> {:error, [:invalid_api_response]}
+      {:error, {:invalid, _reason}} -> {:error, [:invalid_api_response]}
+      {:error, %{reason: reason}} -> {:error, [reason]}
+    end
   end
 end

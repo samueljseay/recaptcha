@@ -4,19 +4,19 @@ defmodule RecaptchaTest do
   # see https://developers.google.com/recaptcha/docs/faq#id-like-to-run-automated-tests-with-recaptcha-v2-what-should-i-do
   @google_test_secret "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe"
 
-  test "When the supplied g-recaptcha-response is nil, 'invalid-input-response' is returned" do
+  test "When the supplied g-recaptcha-response is nil, :invalid_input_response is returned" do
     assert {:error, messages} = Recaptcha.verify(nil)
-    assert messages == ["invalid-input-response"]
+    assert messages == [:invalid_input_response]
   end
 
   test "When the supplied g-recaptcha-response is not nil, but invalid, multiple errors are returned" do
     assert {:error, messages} = Recaptcha.verify("not_valid")
-    assert messages == ["invalid-input-response", "invalid-input-secret"]
+    assert messages == [:invalid_input_response, :invalid_input_secret]
   end
 
-  test "When the correct secret is supplied but g-recaptcha-response is invalid 'invalid-input-response' is returned" do
+  test "When the correct secret is supplied but g-recaptcha-response is invalid :invalid_input_response' is returned" do
     assert {:error, messages} = Recaptcha.verify("not_valid", secret: @google_test_secret)
-    assert messages == ["invalid-input-response"]
+    assert messages == [:invalid_input_response]
   end
 
   test "When a valid response is supplied, a success response is returned" do

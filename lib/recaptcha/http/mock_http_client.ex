@@ -7,7 +7,7 @@ defmodule Recaptcha.Http.MockClient do
 
   def request_verification("response=valid_response&secret=6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe" = body, options) do
     send self(), {:request_verification, body, options}
-    %{"success" => true, "challenge_ts" => "timestamp", "hostname" => "localhost"}
+    {:ok, %{"success" => true, "challenge_ts" => "timestamp", "hostname" => "localhost"}}
   end
 
   # every other match is a pass through to the real client
