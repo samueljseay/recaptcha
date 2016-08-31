@@ -1,4 +1,8 @@
 defmodule Recaptcha.Http.MockClient do
+  @moduledoc """
+    A mock HTTP client used for testing.
+  """
+
   def request_verification(body, options \\ [])
 
   def request_verification("response=valid_response&secret=6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe" = body, options) do

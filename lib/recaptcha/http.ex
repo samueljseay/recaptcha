@@ -1,4 +1,7 @@
 defmodule Recaptcha.Http do
+  @moduledoc """
+   Responsible for managing HTTP requests to the reCAPTCHA API
+  """
   @headers [{"Content-type", "application/x-www-form-urlencoded"}, {"Accept", "application/json"}]
   @url Application.get_env(:recaptcha, :verify_url)
   @timeout Application.get_env(:recaptcha, :timeout, 5000)

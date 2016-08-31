@@ -4,6 +4,17 @@ A simple Elixir package for implementing [reCAPTCHA] in [Elixir] applications.
 
 [reCAPTCHA]: http://www.google.com/recaptcha
 
+## Migration from 1.x
+
+There are several breaking changes in recaptcha version 2.
+
+The 2 most obvious are that templating is now in a separate module: `Recaptcha.Template` the `display/1` API however, has not changed. In future templating may be moved to a Phoenix specific package.
+
+The `verify` API has changed now to only accept a recaptcha response string and a set of options. (see the verify documentation for supported options). The `remote_ip` that was once passed as the first argument is now an optional argument.
+
+Most other questions about 2.x should be answered by looking over the documentation and the code. Please raise an issue
+if you have any problems with migrating.
+
 ## Installation
 
 1. Add recaptcha to your `mix.exs` dependencies
@@ -28,13 +39,12 @@ A simple Elixir package for implementing [reCAPTCHA] in [Elixir] applications.
 
 ## Config
 
-By default the public and private keys are loaded via the RECAPTCHA_PUBLIC_KEY and RECAPTCHA_PRIVATE_KEY environment variables.
-Part of the reason for doing this is to encourage best practice (specifically not committing your recaptcha private key to your code base). You can of course override them in your own config any way that you like.
+By default the public and private keys are loaded via the `RECAPTCHA_PUBLIC_KEY` and `RECAPTCHA_PRIVATE_KEY` environment variables. Part of the reason for doing this is to encourage best practice (specifically not committing your reCAPTCHA secret key to your code base). You can of course override them in your own config any way that you like.
 
 ```elixir
   config :recaptcha,
     public_key: System.get_env("RECAPTCHA_PUBLIC_KEY"),
-    private_key: System.get_env("RECAPTCHA_PRIVATE_KEY")
+    secret: System.get_env("RECAPTCHA_PRIVATE_KEY")
 ```
 
 ## Usage
@@ -75,7 +85,7 @@ Recaptcha provides the `verify/2` method, that can be used like this:
 
 `verify` method sends a `POST` request to the reCAPTCHA API and returns 2 possible values:
 
-`{:ok, %{challenge_ts: timestamp, hostname: host}}` -> The captcha is valid, see the [documentation](https://developers.google.com/recaptcha/docs/verify#api-response) for more details.
+`{:ok, %Recaptcha.Response{challenge_ts: timestamp, hostname: host}}` -> The captcha is valid, see the [documentation](https://developers.google.com/recaptcha/docs/verify#api-response) for more details.
 
 `{:error, errors}` -> Any possible errors will be available in `errors`, See the [error documentation](https://developers.google.com/recaptcha/docs/verify#error-code-reference) for more details.
 
