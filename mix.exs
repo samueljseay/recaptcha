@@ -3,8 +3,8 @@ defmodule Recaptcha.Mixfile do
 
   def project do
     [app: :recaptcha,
-     version: "1.1.1",
-     elixir: "~> 1.0",
+     version: "2.0.0",
+     elixir: "~> 1.2",
      description: description,
      deps: deps,
      package: package]
@@ -16,21 +16,23 @@ defmodule Recaptcha.Mixfile do
 
   defp description do
     """
-    A simple reCaptcha package for Phoenix applications.
+    A simple reCaptcha package for Elixir applications, provides verification
+    and templates for rendering forms with the reCaptcha widget
     """
   end
 
   defp deps do
     [
-      {:httpoison, "~> 0.7"},
-      {:poison, "~> 1.5"}
+      {:httpoison, "~> 0.9.0"},
+      {:poison, "~> 2.0"},
+      {:credo, "~> 0.4", only: [:dev, :test]}
     ]
   end
 
   defp package do
     [files: ["lib", "mix.exs", "README.md", "LICENSE"],
-     maintainers: ["Alekseev Mikhail"],
+     maintainers: ["Samuel Seay"],
      licenses: ["MIT"],
-     links: %{"GitHub" => "https://github.com/JustMikey/recaptcha"}]
+     links: %{"GitHub" => "https://github.com/samueljseay/recaptcha"}]
   end
 end
