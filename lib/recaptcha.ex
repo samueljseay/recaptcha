@@ -43,7 +43,6 @@ defmodule Recaptcha do
     application_options
     |> Keyword.merge(body_options)
     |> Keyword.put(:response, response)
-    |> Enum.into(%{})
     |> URI.encode_query
   end
 end

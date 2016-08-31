@@ -38,7 +38,7 @@ defmodule RecaptchaTest do
   test "Remote IP is used in the request body when it is passed into verify/2 as an option" do
     Recaptcha.verify("valid_response", remote_ip: "192.168.1.1")
 
-    assert_received {:request_verification, "remote_ip=192.168.1.1&response=valid_response&secret=test_secret", _}
+    assert_received {:request_verification, "response=valid_response&secret=test_secret&remote_ip=192.168.1.1", _}
   end
 
   test "Adding unsupported options does not append them to the request body" do
