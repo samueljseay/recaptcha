@@ -1,5 +1,7 @@
 # Recaptcha
 
+![Build Status](https://travis-ci.org/samueljseay/recaptcha.svg?branch=master)
+
 A simple Elixir package for implementing [reCAPTCHA] in Elixir applications.
 
 [reCAPTCHA]: http://www.google.com/recaptcha
