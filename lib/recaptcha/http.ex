@@ -6,8 +6,6 @@ defmodule Recaptcha.Http do
     {"Content-type", "application/x-www-form-urlencoded"},
     {"Accept", "application/json"}
   ]
-  @url Application.get_env(:recaptcha, :verify_url)
-  @timeout Application.get_env(:recaptcha, :timeout, 5000)
 
   @doc """
   Sends an HTTP request to the reCAPTCHA version 2.0 API.
@@ -34,9 +32,11 @@ defmodule Recaptcha.Http do
   """
   @spec request_verification(map, [timeout: integer]) :: {:ok, map} | {:error, [atom]}
   def request_verification(body, options \\ []) do
-    timeout = options[:timeout] || @timeout
+    timeout = options[:timeout] || Application.get_env(:recaptcha, :timeout, 5000)
+    url = Application.get_env(:recaptcha, :verify_url)
+
     result =
-      with {:ok, response} <- HTTPoison.post(@url, body, @headers, timeout: timeout),
+      with {:ok, response} <- HTTPoison.post(url, body, @headers, timeout: timeout),
            {:ok, data} <- Poison.decode(response.body) do
         {:ok, data}
       end

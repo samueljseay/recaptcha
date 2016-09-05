@@ -5,7 +5,6 @@ defmodule Recaptcha do
     See the [documentation](https://developers.google.com/recaptcha/docs/verify)
     for more details.
   """
-  @secret Application.get_env(:recaptcha, :secret)
   @http_client Application.get_env(:recaptcha, :http_client, Recaptcha.Http)
 
   @doc """
@@ -47,7 +46,7 @@ defmodule Recaptcha do
 
   defp request_body(response, options) do
     body_options = Keyword.take(options, [:remote_ip, :secret])
-    application_options = [secret: @secret]
+    application_options = [secret: Application.get_env(:recaptcha, :secret)]
 
     # override application secret with options secret if it exists
     application_options

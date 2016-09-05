@@ -57,7 +57,7 @@ Use `raw` (if you're using Phoenix.HTML) and `Recaptcha.Template.display/1` meth
 ```html
 <form name="someform" method="post" action="/somewhere">
   ...
-  <%= raw Recaptcha.display %>
+  <%= raw Recaptcha.Template.display %>
   ...
 </form>
 ```
