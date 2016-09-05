@@ -2,8 +2,8 @@ defmodule Recaptcha.Template do
   @moduledoc """
     Responsible for rendering boilerplate recaptcha HTML code, supports noscript fallback.
 
-    Currently the [explicit render](https://developers.google.com/recaptcha/docs/display#explicit_render) functionality
-    is not supported.
+    [Some](https://developers.google.com/recaptcha/docs/display#explicit_render)
+    functionality is not currently supported.
 
     In future this module may be separated out into a Phoenix specific library.
   """

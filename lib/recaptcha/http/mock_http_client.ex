@@ -2,6 +2,7 @@ defmodule Recaptcha.Http.MockClient do
   @moduledoc """
     A mock HTTP client used for testing.
   """
+  alias Recaptcha.Http
 
   def request_verification(body, options \\ [])
 
@@ -13,6 +14,6 @@ defmodule Recaptcha.Http.MockClient do
   # every other match is a pass through to the real client
   def request_verification(body, options) do
     send self(), {:request_verification, body, options}
-    Recaptcha.Http.request_verification(body, options)
+    Http.request_verification(body, options)
   end
 end

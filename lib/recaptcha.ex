@@ -2,7 +2,8 @@ defmodule Recaptcha do
   @moduledoc """
     A module for verifying reCAPTCHA version 2.0 response strings.
 
-    See the [documentation](https://developers.google.com/recaptcha/docs/verify) for more details.
+    See the [documentation](https://developers.google.com/recaptcha/docs/verify)
+    for more details.
   """
   @secret Application.get_env(:recaptcha, :secret)
   @http_client Application.get_env(:recaptcha, :http_client, Recaptcha.Http)
@@ -13,14 +14,17 @@ defmodule Recaptcha do
   ## Options
 
     * `:timeout` - the timeout for the request (defaults to 5000ms)
-    * `:secret`  - the secret key used by recaptcha (defaults to the secret provided in application config)
+    * `:secret`  - the secret key used by recaptcha (defaults to the secret
+      provided in application config)
     * `:remote_ip` - the IP address of the user (optional and not set by default)
 
   ## Example
 
     {:ok, api_response} = Recaptcha.verify("response_string")
   """
-  @spec verify(String.t, [timeout: integer, secret: String.t, remote_ip: String.t]) :: {:ok, Recaptcha.Response.t} | {:error, [atom]}
+  @spec verify(String.t, [timeout: integer, secret: String.t,
+                          remote_ip: String.t]) :: {:ok, Recaptcha.Response.t} |
+                                                   {:error, [atom]}
   def verify(response, options \\ [])
 
   def verify(nil = _response, _) do
@@ -28,10 +32,16 @@ defmodule Recaptcha do
   end
 
   def verify(response, options) do
-    case @http_client.request_verification(request_body(response, options), Keyword.take(options, [:timeout])) do
-      {:error, errors} -> {:error, errors}
-      {:ok, %{"success" => false, "error-codes" => errors}} -> {:error, Enum.map(errors, fn(error) -> atomise_api_error(error) end) }
-      {:ok, %{"success" => true, "challenge_ts" => timestamp, "hostname" => host}} -> {:ok, %Recaptcha.Response{challenge_ts: timestamp, hostname: host}}
+    case @http_client.request_verification(
+      request_body(response, options),
+      Keyword.take(options, [:timeout])
+    ) do
+      {:error, errors} ->
+        {:error, errors}
+      {:ok, %{"success" => false, "error-codes" => errors}} ->
+        {:error, Enum.map(errors, fn(error) -> atomise_api_error(error) end)}
+      {:ok, %{"success" => true, "challenge_ts" => timestamp, "hostname" => host}} ->
+        {:ok, %Recaptcha.Response{challenge_ts: timestamp, hostname: host}}
     end
   end
 
@@ -47,7 +57,8 @@ defmodule Recaptcha do
   end
 
   defp atomise_api_error(error) do
-    String.replace(error, "-", "_")
+    error
+    |> String.replace("-", "_")
     |> String.to_atom
   end
 end
