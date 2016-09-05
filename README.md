@@ -1,16 +1,15 @@
 # Recaptcha
 
-A simple Elixir package for implementing [reCAPTCHA] in [Elixir] applications.
+A simple Elixir package for implementing [reCAPTCHA] in Elixir applications.
 
 [reCAPTCHA]: http://www.google.com/recaptcha
 
 ## Migration from 1.x
 
-There are several breaking changes in recaptcha version 2.
+### Breaking Changes
 
-The 2 most obvious are that templating is now in a separate module: `Recaptcha.Template` the `display/1` API however, has not changed. In future templating may be moved to a Phoenix specific package.
-
-The `verify` API has changed now to only accept a recaptcha response string and a set of options. (see the verify documentation for supported options). The `remote_ip` that was once passed as the first argument is now an optional argument.
+1. Template functionality is now in a separate module: `Recaptcha.Template`. Please note: in future templating may move to a Phoenix specific package.
+2. `verify` API has changed, see the code for documentation of the new API.
 
 Most other questions about 2.x should be answered by looking over the documentation and the code. Please raise an issue
 if you have any problems with migrating.
@@ -39,7 +38,7 @@ if you have any problems with migrating.
 
 ## Config
 
-By default the public and private keys are loaded via the `RECAPTCHA_PUBLIC_KEY` and `RECAPTCHA_PRIVATE_KEY` environment variables. Part of the reason for doing this is to encourage best practice (specifically not committing your reCAPTCHA secret key to your code base). You can of course override them in your own config any way that you like.
+By default the public and private keys are loaded via the `RECAPTCHA_PUBLIC_KEY` and `RECAPTCHA_PRIVATE_KEY` environment variables.
 
 ```elixir
   config :recaptcha,
@@ -71,7 +70,7 @@ Option                  | Action                                                
 
 ### Verify API
 
-Recaptcha provides the `verify/2` method, that can be used like this:
+Recaptcha provides the `verify/2` method. Below is an example using a Phoenix controller action:
 
 ```elixir
   def create(conn, params) do
@@ -100,7 +99,7 @@ Option                  | Action                                                
 ## Contributing
 
 * Fork the project.
-* Make your feature addition or bug fix.
+* Make your feature addition or bug fix. (If you're not sure raise an issue to discuss first)
 * Commit
 * Send me a pull request
 
