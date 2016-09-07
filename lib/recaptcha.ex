@@ -41,7 +41,7 @@ defmodule Recaptcha do
         {:error, Enum.map(errors, fn(error) -> atomise_api_error(error) end)}
       {:ok, %{"success" => true, "challenge_ts" => timestamp, "hostname" => host}} ->
         {:ok, %Recaptcha.Response{challenge_ts: timestamp, hostname: host}}
-      {:ok, %{"success" => false, "challenge_ts" => timestamp, "hostname" => host}} ->
+      {:ok, %{"success" => false, "challenge_ts" => _timestamp, "hostname" => _host}} ->
         {:error, [:challenge_failed]}
     end
   end
