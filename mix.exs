@@ -2,12 +2,23 @@ defmodule Recaptcha.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :recaptcha,
-     version: "2.0.1",
-     elixir: "~> 1.2",
-     description: description,
-     deps: deps,
-     package: package]
+    [
+      app: :recaptcha,
+      version: "2.0.1",
+      elixir: "~> 1.2",
+      description: description(),
+      deps: deps(),
+      package: package(),
+
+      # Test coverage:
+      test_coverage: [tool: ExCoveralls],
+      preferred_cli_env: [
+        "coveralls": :test,
+        "coveralls.detail": :test,
+        "coveralls.post": :test,
+        "coveralls.html": :test,
+      ],
+   ]
   end
 
   def application do
@@ -26,7 +37,8 @@ defmodule Recaptcha.Mixfile do
       {:httpoison, "~> 0.9.0"},
       {:poison, "~> 1.5 or ~> 2.0"},
       {:credo, "~> 0.4", only: [:dev, :test]},
-      {:ex_doc, ">= 0.0.0", only: :dev}
+      {:ex_doc, ">= 0.0.0", only: :dev},
+      {:excoveralls, "~> 0.5", only: :test},
     ]
   end
 
