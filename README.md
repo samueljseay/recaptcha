@@ -1,6 +1,6 @@
 # Recaptcha
 
-![Build Status](https://travis-ci.org/samueljseay/recaptcha.svg?branch=master)
+![Build Status](https://travis-ci.org/samueljseay/recaptcha.svg?branch=master) ![Coverage Status](https://coveralls.io/repos/github/samueljseay/recaptcha/badge.svg?branch=master)
 
 A simple Elixir package for implementing [reCAPTCHA] in Elixir applications.
 
