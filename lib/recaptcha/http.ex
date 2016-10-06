@@ -34,8 +34,8 @@ defmodule Recaptcha.Http do
   """
   @spec request_verification(map, [timeout: integer]) :: {:ok, map} | {:error, [atom]}
   def request_verification(body, options \\ []) do
-    timeout = options[:timeout] || Application.get_env(:recaptcha, :timeout, 5000)
-    url = Application.get_env(:recaptcha, :verify_url, @default_verify_url)
+    timeout = options[:timeout] || Recaptcha.Config.get_env(:recaptcha, :timeout, 5000)
+    url = Recaptcha.Config.get_env(:recaptcha, :verify_url, @default_verify_url)
 
     result =
       with {:ok, response} <- HTTPoison.post(url, body, @headers, timeout: timeout),

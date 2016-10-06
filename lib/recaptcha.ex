@@ -48,7 +48,7 @@ defmodule Recaptcha do
 
   defp request_body(response, options) do
     body_options = Keyword.take(options, [:remote_ip, :secret])
-    application_options = [secret: Application.get_env(:recaptcha, :secret)]
+    application_options = [secret: Recaptcha.Config.get_env(:recaptcha, :secret)]
 
     # override application secret with options secret if it exists
     application_options
