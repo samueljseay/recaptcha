@@ -2,6 +2,9 @@ defmodule Recaptcha.Http do
   @moduledoc """
    Responsible for managing HTTP requests to the reCAPTCHA API
   """
+
+  alias Recaptcha.Config
+
   @headers [
     {"Content-type", "application/x-www-form-urlencoded"},
     {"Accept", "application/json"}
@@ -34,8 +37,8 @@ defmodule Recaptcha.Http do
   """
   @spec request_verification(map, [timeout: integer]) :: {:ok, map} | {:error, [atom]}
   def request_verification(body, options \\ []) do
-    timeout = options[:timeout] || Application.get_env(:recaptcha, :timeout, 5000)
-    url = Application.get_env(:recaptcha, :verify_url, @default_verify_url)
+    timeout = options[:timeout] || Config.get_env(:recaptcha, :timeout, 5000)
+    url = Config.get_env(:recaptcha, :verify_url, @default_verify_url)
 
     result =
       with {:ok, response} <- HTTPoison.post(url, body, @headers, timeout: timeout),

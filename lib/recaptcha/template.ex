@@ -8,6 +8,7 @@ defmodule Recaptcha.Template do
     In future this module may be separated out into a Phoenix specific library.
   """
   require Elixir.EEx
+  alias Recaptcha.Config
 
   EEx.function_from_file :defp, :render_template, "lib/template.html.eex", [:assigns]
 
@@ -17,7 +18,7 @@ defmodule Recaptcha.Template do
   To convert the string to html code, use Phoenix.HTML.Raw/1 method
   """
   def display(options \\ []) do
-    public_key = options[:public_key] || Application.get_env(:recaptcha, :public_key)
+    public_key = options[:public_key] || Config.get_env(:recaptcha, :public_key)
     render_template(public_key: public_key, options: options)
   end
 end
