@@ -4,7 +4,7 @@ defmodule Recaptcha.Mixfile do
   def project do
     [
       app: :recaptcha,
-      version: "2.0.1",
+      version: "2.1.1",
       elixir: "~> 1.2",
       description: description(),
       deps: deps(),
