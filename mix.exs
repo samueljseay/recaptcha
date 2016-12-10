@@ -10,6 +10,9 @@ defmodule Recaptcha.Mixfile do
       deps: deps(),
       package: package(),
 
+      build_embedded: Mix.env == :prod,
+      start_permanent: Mix.env == :prod,
+
       # Test coverage:
       test_coverage: [tool: ExCoveralls],
       preferred_cli_env: [
@@ -36,7 +39,7 @@ defmodule Recaptcha.Mixfile do
     [
       {:httpoison, "~> 0.9.0"},
       {:poison, "~> 1.5 or ~> 2.0"},
-      {:credo, "~> 0.4", only: [:dev, :test]},
+      {:credo, "~> 0.5.0", only: [:dev, :test]},
       {:ex_doc, ">= 0.0.0", only: :dev},
       {:excoveralls, "~> 0.5", only: :test},
     ]
@@ -44,7 +47,7 @@ defmodule Recaptcha.Mixfile do
 
   defp package do
     [files: ["lib", "mix.exs", "README.md", "LICENSE"],
-     maintainers: ["Samuel Seay"],
+     maintainers: ["Samuel Seay", "Nikita Sobolev", "Michael JustMikey"],
      licenses: ["MIT"],
      links: %{"GitHub" => "https://github.com/samueljseay/recaptcha"}]
   end
