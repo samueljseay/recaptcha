@@ -36,7 +36,7 @@ defmodule Recaptcha.Mixfile do
     [
       {:httpoison, "~> 0.9.0"},
       {:poison, "~> 1.5 or ~> 2.0"},
-      {:credo, "~> 0.4", only: [:dev, :test]},
+      {:credo, "~> 0.6", only: [:dev, :test]},
       {:ex_doc, ">= 0.0.0", only: :dev},
       {:excoveralls, "~> 0.5", only: :test},
     ]
