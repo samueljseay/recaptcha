@@ -37,11 +37,11 @@ defmodule Recaptcha.Mixfile do
 
   defp deps do
     [
-      {:httpoison, "~> 0.9.0"},
-      {:poison, "~> 1.5 or ~> 2.0"},
+      {:httpoison, "~> 0.11.0"},
+      {:poison, "~> 1.5 or ~> 2.0 or ~> 3.0"},
       {:credo, "~> 0.6", only: [:dev, :test]},
       {:ex_doc, ">= 0.0.0", only: :dev},
-      {:excoveralls, "~> 0.5", only: :test},
+      {:excoveralls, "~> 0.6", only: :test},
     ]
   end
 
