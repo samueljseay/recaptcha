@@ -41,7 +41,7 @@ defmodule Recaptcha.Mixfile do
       {:poison, "~> 1.5 or ~> 2.0 or ~> 3.0"},
       {:credo, "~> 0.6", only: [:dev, :test]},
       {:ex_doc, ">= 0.0.0", only: :dev},
-      {:excoveralls, "~> 0.5", only: :test},
+      {:excoveralls, "~> 0.6", only: :test},
     ]
   end
 
