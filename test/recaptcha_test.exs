@@ -15,7 +15,7 @@ defmodule RecaptchaTest do
   end
 
   test "When a valid response is supplied, a success response is returned" do
-    assert {:ok, %{challenge_ts: _, hostname: _}} = Recaptcha.verify("valid_response", secret: "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe")
+    assert {:ok, %{challenge_ts: _, hostname: _}} = Recaptcha.verify("valid_response", secret: @google_test_secret)
   end
 
   test "When secret is not overridden the configured secret is used" do
