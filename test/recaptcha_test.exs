@@ -9,13 +9,8 @@ defmodule RecaptchaTest do
     assert messages == [:invalid_input_response, :invalid_input_secret]
   end
 
-  test "When the correct secret is supplied but g-recaptcha-response is invalid :invalid_input_response' is returned" do
-    assert {:error, messages} = Recaptcha.verify("not_valid", secret: @google_test_secret)
-    assert messages == [:invalid_input_response]
-  end
-
   test "When a valid response is supplied, a success response is returned" do
-    assert {:ok, %{challenge_ts: _, hostname: _}} = Recaptcha.verify("valid_response", secret: "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe")
+    assert {:ok, %{challenge_ts: _, hostname: _}} = Recaptcha.verify("valid_response", secret: @google_test_secret)
   end
 
   test "When secret is not overridden the configured secret is used" do
