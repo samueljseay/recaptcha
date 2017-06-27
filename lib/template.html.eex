@@ -5,7 +5,8 @@
     data-theme="<%= @options[:theme] %>"
     data-type="<%= @options[:type] %>"
     data-tabindex="<%= @options[:tabindex] %>"
-    data-size="<%= @options[:size] %>">
+    data-size="<%= @options[:size] %>"
+    data-callback="<%= @options[:callback] %>">
 </div>
 
 <%= if @options[:noscript] do %>
