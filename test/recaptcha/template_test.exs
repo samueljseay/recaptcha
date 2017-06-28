@@ -2,12 +2,13 @@ defmodule RecaptchaTemplateTest do
   use ExUnit.Case, async: true
 
   test "supplying options to display/1 renders them in the g-recaptcha div" do
-    template_string = Recaptcha.Template.display(theme: "dark", type: "audio", tabindex: 1, size: "compact")
+    template_string = Recaptcha.Template.display(theme: "dark", type: "audio", tabindex: 1, size: "compact", callback: "enableBtn")
 
     assert template_string =~ "data-theme=\"dark\""
     assert template_string =~ "data-type=\"audio\""
     assert template_string =~ "data-tabindex=\"1\""
     assert template_string =~ "data-size=\"compact\""
+    assert template_string =~ "data-callback=\"enableBtn\""
   end
 
   test "supplying a public key in options to display/1 overrides it in the g-recaptcha-div" do
