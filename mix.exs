@@ -21,11 +21,17 @@ defmodule Recaptcha.Mixfile do
         "coveralls.post": :test,
         "coveralls.html": :test,
       ],
+
+      # Dialyzer:
+      dialyzer: [
+        plt_add_deps: :apps_direct,
+        plt_add_apps: [:poison]
+      ]
    ]
   end
 
   def application do
-    [applications: [:logger, :httpoison]]
+    [applications: [:logger, :httpoison, :eex]]
   end
 
   defp description do
@@ -39,8 +45,10 @@ defmodule Recaptcha.Mixfile do
     [
       {:httpoison, "~> 0.11.0"},
       {:poison, "~> 1.5 or ~> 2.0 or ~> 3.0"},
+
       {:credo, "~> 0.6", only: [:dev, :test]},
       {:ex_doc, ">= 0.0.0", only: :dev},
+      {:dialyxir, "~> 0.5", only: [:dev]},
       {:excoveralls, "~> 0.6", only: :test},
     ]
   end
