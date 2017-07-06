@@ -6,7 +6,7 @@ defmodule Recaptcha.Config do
   @doc """
   Returns the requested variable
   """
-  @spec get_env(atom, atom, atom | map) :: term
+  @spec get_env(atom, atom, any) :: any
   def get_env(application, key, default \\ nil) do
     application
     |> Application.get_env(key, default)

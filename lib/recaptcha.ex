@@ -6,9 +6,9 @@ defmodule Recaptcha do
     for more details.
   """
 
-  alias Recaptcha.Config
+  alias Recaptcha.{Config, Http, Response}
 
-  @http_client Application.get_env(:recaptcha, :http_client, Recaptcha.Http)
+  @http_client Application.get_env(:recaptcha, :http_client, Http)
 
   @doc """
   Verifies a reCAPTCHA response string.
@@ -24,18 +24,20 @@ defmodule Recaptcha do
 
     {:ok, api_response} = Recaptcha.verify("response_string")
   """
-  @spec verify(String.t, Keyword.t) :: {:ok, Recaptcha.Response.t} | {:error, [atom]}
+  @spec verify(String.t, Keyword.t) :: {:ok, Response.t} | {:error, [atom]}
   def verify(response, options \\ []) do
-    case @http_client.request_verification(
+    verification = @http_client.request_verification(
       request_body(response, options),
       Keyword.take(options, [:timeout])
-    ) do
+    )
+
+    case verification do
       {:error, errors} ->
         {:error, errors}
       {:ok, %{"success" => false, "error-codes" => errors}} ->
-        {:error, Enum.map(errors, fn(error) -> atomise_api_error(error) end)}
+        {:error, Enum.map(errors, &atomise_api_error/1)}
       {:ok, %{"success" => true, "challenge_ts" => timestamp, "hostname" => host}} ->
-        {:ok, %Recaptcha.Response{challenge_ts: timestamp, hostname: host}}
+        {:ok, %Response{challenge_ts: timestamp, hostname: host}}
       {:ok, %{"success" => false, "challenge_ts" => _timestamp, "hostname" => _host}} ->
         {:error, [:challenge_failed]}
     end
@@ -55,6 +57,6 @@ defmodule Recaptcha do
   defp atomise_api_error(error) do
     error
     |> String.replace("-", "_")
-    |> String.to_atom
+    |> String.to_existing_atom
   end
 end

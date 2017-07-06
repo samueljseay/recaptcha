@@ -23,7 +23,7 @@ if you have any problems with migrating.
 ```elixir
   defp deps do
     [
-      {:recaptcha, "~> 2.0"},      
+      {:recaptcha, "~> 2.0"},
     ]
   end
 ```
@@ -76,7 +76,6 @@ Recaptcha provides the `verify/2` method. Below is an example using a Phoenix co
 
 ```elixir
   def create(conn, params) do
-    # some code  
     case Recaptcha.verify(params["g-recaptcha-response"]) do
       {:ok, response} -> do_something
       {:error, errors} -> handle_error
@@ -100,10 +99,7 @@ Option                  | Action                                                
 
 ## Contributing
 
-* Fork the project.
-* Make your feature addition or bug fix. (If you're not sure raise an issue to discuss first)
-* Commit
-* Send me a pull request
+Check out [CONTRIBUTING.md](/CONTRIBUTING.md) if you want to help.
 
 ## License
 
