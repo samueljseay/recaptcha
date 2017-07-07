@@ -55,8 +55,10 @@ defmodule Recaptcha do
   end
 
   defp atomise_api_error(error) do
+    # See why we are using `to_atom` here:
+    # https://github.com/samueljseay/recaptcha/pull/28#issuecomment-313604733
     error
     |> String.replace("-", "_")
-    |> String.to_existing_atom
+    |> String.to_atom
   end
 end
