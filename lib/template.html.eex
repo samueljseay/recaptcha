@@ -1,4 +1,4 @@
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<script src="https://www.google.com/recaptcha/api.js?hl=<%= @options[:hl] %>" async defer></script>
 
 <div class="g-recaptcha"
     data-sitekey="<%= @public_key %>"
@@ -15,7 +15,7 @@
     <div style="width: 302px; height: 422px;">
       <div style="width: 302px; height: 422px; position: relative;">
         <div style="width: 302px; height: 422px; position: absolute;">
-          <iframe src="https://www.google.com/recaptcha/api/fallback?k=<%= @public_key %>"
+          <iframe src="https://www.google.com/recaptcha/api/fallback?k=<%= @public_key %>&hl=<%= @options[:hl] %>"
                        frameborder="0" scrolling="no"
                        style="width: 302px; height:422px; border-style: none;">
           </iframe>
