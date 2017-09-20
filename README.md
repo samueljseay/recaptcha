@@ -68,6 +68,7 @@ Option                  | Action                                                
 :---------------------- | :----------------------------------------------------- | :------------------------
 `noscript`              | Renders default noscript code provided by google       | `false`
 `public_key`            | Sets key to the `data-sitekey` reCaptcha div attribute | Public key from the config file
+`hl`                    | Sets the language of the reCaptcha                     | en
 
 
 ### Verify API

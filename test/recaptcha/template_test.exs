@@ -23,4 +23,10 @@ defmodule RecaptchaTemplateTest do
     assert template_string =~ "<noscript>"
     assert template_string =~ "https://www.google.com/recaptcha/api/fallback?k=test_public_key"
   end
+
+  test "supplying a hl in options to display/1 overrides it in the script tag" do
+    template_string = Recaptcha.Template.display(hl: "en")
+
+    assert template_string =~ "https://www.google.com/recaptcha/api.js?hl=en"
+  end
 end
