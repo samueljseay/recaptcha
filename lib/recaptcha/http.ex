@@ -35,13 +35,14 @@ defmodule Recaptcha.Http do
       remote_ip: "remote_ip"
     })
   """
-  @spec request_verification(binary, [timeout: integer]) :: {:ok, map} | {:error, [atom]}
+  @spec request_verification(binary, Keyword.t) :: {:ok, map} | {:error, [atom]}
   def request_verification(body, options \\ []) do
     timeout = options[:timeout] || Config.get_env(:recaptcha, :timeout, 5000)
     url = Config.get_env(:recaptcha, :verify_url, @default_verify_url)
 
+    opts = [{:timeout, timeout} | options]
     result =
-      with {:ok, response} <- HTTPoison.post(url, body, @headers, timeout: timeout),
+      with {:ok, response} <- HTTPoison.post(url, body, @headers, opts),
            {:ok, data} <- Poison.decode(response.body) do
         {:ok, data}
       end
