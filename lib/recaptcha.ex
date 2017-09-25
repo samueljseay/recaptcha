@@ -28,7 +28,7 @@ defmodule Recaptcha do
   def verify(response, options \\ []) do
     verification = @http_client.request_verification(
       request_body(response, options),
-      Keyword.take(options, [:timeout])
+      options
     )
 
     case verification do
