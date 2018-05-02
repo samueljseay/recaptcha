@@ -10,8 +10,7 @@ defmodule Recaptcha.Template do
   require Elixir.EEx
   alias Recaptcha.Config
 
-  EEx.function_from_file :defp, :render_template,
-    "lib/template.html.eex", [:assigns]
+  EEx.function_from_file(:defp, :render_template, "lib/template.html.eex", [:assigns])
 
   @doc """
   Returns a string with reCAPTCHA code

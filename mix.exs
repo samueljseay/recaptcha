@@ -9,17 +9,16 @@ defmodule Recaptcha.Mixfile do
       description: description(),
       deps: deps(),
       package: package(),
-
-      build_embedded: Mix.env == :prod,
-      start_permanent: Mix.env == :prod,
+      build_embedded: Mix.env() == :prod,
+      start_permanent: Mix.env() == :prod,
 
       # Test coverage:
       test_coverage: [tool: ExCoveralls],
       preferred_cli_env: [
-        "coveralls": :test,
+        coveralls: :test,
         "coveralls.detail": :test,
         "coveralls.post": :test,
-        "coveralls.html": :test,
+        "coveralls.html": :test
       ],
 
       # Dialyzer:
@@ -27,7 +26,7 @@ defmodule Recaptcha.Mixfile do
         plt_add_deps: :apps_direct,
         plt_add_apps: [:poison]
       ]
-   ]
+    ]
   end
 
   def application do
@@ -48,14 +47,16 @@ defmodule Recaptcha.Mixfile do
       {:credo, "~> 0.8.4", only: [:dev, :test]},
       {:ex_doc, ">= 0.0.0", only: :dev},
       {:dialyxir, "~> 0.5", only: [:dev]},
-      {:excoveralls, "~> 0.7.1", only: :test},
+      {:excoveralls, "~> 0.7.1", only: :test}
     ]
   end
 
   defp package do
-    [files: ["lib", "mix.exs", "README.md", "LICENSE"],
-     maintainers: ["Samuel Seay", "Nikita Sobolev", "Michael JustMikey"],
-     licenses: ["MIT"],
-     links: %{"GitHub" => "https://github.com/samueljseay/recaptcha"}]
+    [
+      files: ["lib", "mix.exs", "README.md", "LICENSE"],
+      maintainers: ["Samuel Seay", "Nikita Sobolev", "Michael JustMikey"],
+      licenses: ["MIT"],
+      links: %{"GitHub" => "https://github.com/samueljseay/recaptcha"}
+    ]
   end
 end
