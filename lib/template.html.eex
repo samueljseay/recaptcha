@@ -6,6 +6,7 @@
     data-type="<%= @options[:type] %>"
     data-tabindex="<%= @options[:tabindex] %>"
     data-size="<%= @options[:size] %>"
+    data-badge="<%= @options[:badge] %>"
     data-callback="<%= @options[:callback] %>">
 </div>
 
