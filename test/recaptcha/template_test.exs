@@ -38,4 +38,15 @@ defmodule RecaptchaTemplateTest do
     template_string = Recaptcha.Template.display(size: "compact")
     refute template_string =~ "grecaptcha.execute()"
   end
+
+  test "supplying an option to change the callback even if you are using invisible recaptcha" do
+    template_string = Recaptcha.Template.display()
+    assert template_string =~ "data-callback=\"\""
+
+    template_string = Recaptcha.Template.display(size: "invisible")
+    assert template_string =~ "data-callback=\"recaptchaCallback\""
+
+    template_string = Recaptcha.Template.display(size: "invisible", callback: "myCallback")
+    assert template_string =~ "data-callback=\"myCallback\""
+  end
 end
