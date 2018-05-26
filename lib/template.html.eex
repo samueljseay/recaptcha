@@ -1,4 +1,4 @@
-<script src="https://www.google.com/recaptcha/api.js?hl=<%= @options[:hl] %>" async defer></script>
+<script src="https://www.google.com/recaptcha/api.js?hl=<%= @options[:hl] %>" ></script>
 
 <div class="g-recaptcha"
     data-sitekey="<%= @public_key %>"
@@ -9,6 +9,14 @@
     data-badge="<%= @options[:badge] %>"
     data-callback="<%= @options[:callback] %>">
 </div>
+
+<%= if @options[:size] == "invisible" do %>
+<script type="text/javascript">
+  window.addEventListener('load', function() {
+    grecaptcha.execute()
+  })
+</script>
+<% end %>
 
 <%= if @options[:noscript] do %>
 

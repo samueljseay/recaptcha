@@ -12,6 +12,16 @@ defmodule RecaptchaTemplateTest do
     assert template_string =~ "data-badge=\"inline\""
   end
 
+  test "when invisible recaptcha, run the component at the window load" do
+    template_string = Recaptcha.Template.display(size: "invisible")
+
+    assert template_string =~ "grecaptcha.execute()"
+
+    template_string = Recaptcha.Template.display(size: "compact")
+
+    refute template_string =~ "grecaptcha.execute()"
+  end
+
   test "supplying a public key in options to display/1 overrides it in the g-recaptcha-div" do
     template_string = Recaptcha.Template.display(public_key: "override_test_public_key")
 
