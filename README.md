@@ -54,6 +54,7 @@ By default the public and private keys are loaded via the `RECAPTCHA_PUBLIC_KEY`
 
 Use `raw` (if you're using Phoenix.HTML) and `Recaptcha.Template.display/1` methods to render the captcha widget.
 
+For recaptcha with checkbox
 ```html
 <form name="someform" method="post" action="/somewhere">
   ...
@@ -62,6 +63,16 @@ Use `raw` (if you're using Phoenix.HTML) and `Recaptcha.Template.display/1` meth
 </form>
 ```
 
+For invisible recaptcha
+```html
+<form name="someform" method="post" action="/somewhere">
+  ...
+  <%= raw Recaptcha.Template.display(size: "invisible") %>
+</form>
+  ...
+```
+To change the position of the invisible recaptcha, use an option badge. See https://developers.google.com/recaptcha/docs/invisible on the date-badge.
+
 `display` method accepts additional options as a keyword list, the options are:
 
 Option                  | Action                                                 | Default
@@ -69,7 +80,6 @@ Option                  | Action                                                
 `noscript`              | Renders default noscript code provided by google       | `false`
 `public_key`            | Sets key to the `data-sitekey` reCaptcha div attribute | Public key from the config file
 `hl`                    | Sets the language of the reCaptcha                     | en
-
 
 ### Verify API
 
