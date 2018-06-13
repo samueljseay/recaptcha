@@ -24,20 +24,24 @@ defmodule Recaptcha do
 
     {:ok, api_response} = Recaptcha.verify("response_string")
   """
-  @spec verify(String.t, Keyword.t) :: {:ok, Response.t} | {:error, [atom]}
+  @spec verify(String.t(), Keyword.t()) :: {:ok, Response.t()} | {:error, [atom]}
   def verify(response, options \\ []) do
-    verification = @http_client.request_verification(
-      request_body(response, options),
-      Keyword.take(options, [:timeout])
-    )
+    verification =
+      @http_client.request_verification(
+        request_body(response, options),
+        Keyword.take(options, [:timeout])
+      )
 
     case verification do
       {:error, errors} ->
         {:error, errors}
+
       {:ok, %{"success" => false, "error-codes" => errors}} ->
         {:error, Enum.map(errors, &atomise_api_error/1)}
+
       {:ok, %{"success" => true, "challenge_ts" => timestamp, "hostname" => host}} ->
         {:ok, %Response{challenge_ts: timestamp, hostname: host}}
+
       {:ok, %{"success" => false, "challenge_ts" => _timestamp, "hostname" => _host}} ->
         {:error, [:challenge_failed]}
     end
@@ -51,7 +55,7 @@ defmodule Recaptcha do
     application_options
     |> Keyword.merge(body_options)
     |> Keyword.put(:response, response)
-    |> URI.encode_query
+    |> URI.encode_query()
   end
 
   defp atomise_api_error(error) do
@@ -59,6 +63,6 @@ defmodule Recaptcha do
     # https://github.com/samueljseay/recaptcha/pull/28#issuecomment-313604733
     error
     |> String.replace("-", "_")
-    |> String.to_atom
+    |> String.to_atom()
   end
 end

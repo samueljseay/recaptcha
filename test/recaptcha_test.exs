@@ -10,7 +10,8 @@ defmodule RecaptchaTest do
   end
 
   test "When a valid response is supplied, a success response is returned" do
-    assert {:ok, %{challenge_ts: _, hostname: _}} = Recaptcha.verify("valid_response", secret: @google_test_secret)
+    assert {:ok, %{challenge_ts: _, hostname: _}} =
+             Recaptcha.verify("valid_response", secret: @google_test_secret)
   end
 
   test "When secret is not overridden the configured secret is used" do
@@ -28,7 +29,8 @@ defmodule RecaptchaTest do
   test "Remote IP is used in the request body when it is passed into verify/2 as an option" do
     Recaptcha.verify("valid_response", remote_ip: "192.168.1.1")
 
-    assert_received {:request_verification, "response=valid_response&secret=test_secret&remote_ip=192.168.1.1", _}
+    assert_received {:request_verification,
+                     "response=valid_response&secret=test_secret&remote_ip=192.168.1.1", _}
   end
 
   test "Adding unsupported options does not append them to the request body" do
