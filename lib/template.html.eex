@@ -4,14 +4,6 @@
 <script type="text/javascript">
   var form = null;
 
-  function onLoad() {
-    var submit_buttons = document.querySelectorAll('button[type="submit"]');
-
-    for (var i = 0; i < submit_buttons.length; i++) {
-      submit_buttons[i].disabled = false;
-    }
-  }
-
   function onSubmit(event) {
     event.preventDefault();
 
