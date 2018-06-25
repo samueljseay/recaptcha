@@ -27,6 +27,9 @@ defmodule Recaptcha.Template do
         options[:callback]
       end
 
-    render_template(%{public_key: public_key, callback: callback, options: options})
+    onload = if options[:onload] do "onload=#{options[:onload]}&" else "" end
+    options_dict = Keyword.put(options, :onload, onload)
+
+    render_template(%{public_key: public_key, callback: callback, options: options_dict})
   end
 end

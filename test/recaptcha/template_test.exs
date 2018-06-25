@@ -35,8 +35,14 @@ defmodule RecaptchaTemplateTest do
 
   test "supplying a hl in options to display/1 overrides it in the script tag" do
     template_string = Recaptcha.Template.display(hl: "en")
+    assert template_string =~ "https://www.google.com/recaptcha/api.js?hl=en"
+  end
 
-    assert template_string =~ "https://www.google.com/recaptcha/api.js?onload=onLoad&hl=en"
+  test "supplying a onload in options to display/1 adds it to the script tag" do
+    template_string1 = Recaptcha.Template.display(onload: "onLoad")
+    template_string2 = Recaptcha.Template.display(onload: "onLoad", hl: "en")
+    assert template_string1 =~ "https://www.google.com/recaptcha/api.js?onload=onLoad&hl"
+    assert template_string2 =~ "https://www.google.com/recaptcha/api.js?onload=onLoad&hl=en"
   end
 
   test "supplying a invisible recaptcha on option size equal invisible" do

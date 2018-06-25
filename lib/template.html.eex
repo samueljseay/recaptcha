@@ -1,4 +1,4 @@
-<script src="https://www.google.com/recaptcha/api.js?onload=onLoad&hl=<%= @options[:hl] %>" async defer></script>
+<script src="https://www.google.com/recaptcha/api.js?<%= @options[:onload] %>hl=<%= @options[:hl] %>" async defer></script>
 
 <%= if @options[:size] == "invisible" do %>
 <script type="text/javascript">
