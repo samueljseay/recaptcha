@@ -71,7 +71,28 @@ For invisible recaptcha
 </form>
   ...
 ```
+
 To change the position of the invisible recaptcha, use an option badge. See https://developers.google.com/recaptcha/docs/invisible on the date-badge.
+
+Since recaptcha loads Javascript code asynchronously, you cannot immediately submit the captcha form.
+If you have logic that needs to know if the captcha code has already been loaded (for example disabling submit button until fully loaded), it is possible to pass in a JS-callback that will be called once the captcha has finished loading.
+This can be done as follows:
+
+```html
+<form name="someform" method="post" action="/somewhere">
+  ...
+  <%= raw Recaptcha.Template.display(onload: "myOnLoadCallback") %>
+</form>
+  ...
+```
+
+And then in your JS code:
+
+```javascript
+function myOnLoadCallback() {
+  // perform extra actions here
+}
+```
 
 `display` method accepts additional options as a keyword list, the options are:
 
