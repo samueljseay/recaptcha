@@ -32,7 +32,7 @@ if you have any problems with migrating.
 
 ```elixir
   def application do
-    [ applications: [:recaptcha] ]
+    [ extra_applications: [:recaptcha] ]
   end
 ```
 
