@@ -48,6 +48,14 @@ By default the public and private keys are loaded via the `RECAPTCHA_PUBLIC_KEY`
     secret: {:system, "RECAPTCHA_PRIVATE_KEY"}
 ```
 
+### JSON Decoding
+
+By default `reCaptcha` will use `Poison` to decode JSON responses, this can be changed as such:
+
+```elixir
+  config :recaptcha, :json_library, Jason
+```
+
 ## Usage
 
 ### Render the Widget
