@@ -39,10 +39,11 @@ defmodule Recaptcha.Http do
   def request_verification(body, options \\ []) do
     timeout = options[:timeout] || Config.get_env(:recaptcha, :timeout, 5000)
     url = Config.get_env(:recaptcha, :verify_url, @default_verify_url)
+    json = Application.get_env(:recaptcha, :json_library)
 
     result =
       with {:ok, response} <- HTTPoison.post(url, body, @headers, timeout: timeout),
-           {:ok, data} <- Poison.decode(response.body) do
+           {:ok, data} <- json.decode(response.body) do
         {:ok, data}
       end
 
