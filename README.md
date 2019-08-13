@@ -23,7 +23,7 @@ if you have any problems with migrating.
 ```elixir
   defp deps do
     [
-      {:recaptcha, "~> 2.3"},
+      {:recaptcha, "~> 3.0"},
     ]
   end
 ```

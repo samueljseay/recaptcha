@@ -24,7 +24,8 @@ defmodule Recaptcha do
 
     {:ok, api_response} = Recaptcha.verify("response_string")
   """
-  @spec verify(String.t(), Keyword.t()) :: {:ok, Response.t()} | {:error, [atom]}
+  @spec verify(String.t(), Keyword.t()) ::
+          {:ok, Response.t()} | {:error, [atom]}
   def verify(response, options \\ []) do
     verification =
       @http_client.request_verification(
@@ -39,10 +40,12 @@ defmodule Recaptcha do
       {:ok, %{"success" => false, "error-codes" => errors}} ->
         {:error, Enum.map(errors, &atomise_api_error/1)}
 
-      {:ok, %{"success" => true, "challenge_ts" => timestamp, "hostname" => host}} ->
+      {:ok,
+       %{"success" => true, "challenge_ts" => timestamp, "hostname" => host}} ->
         {:ok, %Response{challenge_ts: timestamp, hostname: host}}
 
-      {:ok, %{"success" => false, "challenge_ts" => _timestamp, "hostname" => _host}} ->
+      {:ok,
+       %{"success" => false, "challenge_ts" => _timestamp, "hostname" => _host}} ->
         {:error, [:challenge_failed]}
     end
   end

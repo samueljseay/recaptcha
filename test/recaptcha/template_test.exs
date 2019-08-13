@@ -21,7 +21,8 @@ defmodule RecaptchaTemplateTest do
   end
 
   test "supplying a public key in options to display/1 overrides it in the g-recaptcha-div" do
-    template_string = Recaptcha.Template.display(public_key: "override_test_public_key")
+    template_string =
+      Recaptcha.Template.display(public_key: "override_test_public_key")
 
     assert template_string =~ "data-sitekey=\"override_test_public_key\""
   end
@@ -30,7 +31,9 @@ defmodule RecaptchaTemplateTest do
     template_string = Recaptcha.Template.display(noscript: true)
 
     assert template_string =~ "<noscript>"
-    assert template_string =~ "https://www.google.com/recaptcha/api/fallback?k=test_public_key"
+
+    assert template_string =~
+             "https://www.google.com/recaptcha/api/fallback?k=test_public_key"
   end
 
   test "supplying a hl in options to display/1 overrides it in the script tag" do
@@ -41,8 +44,12 @@ defmodule RecaptchaTemplateTest do
   test "supplying a onload in options to display/1 adds it to the script tag" do
     template_string1 = Recaptcha.Template.display(onload: "onLoad")
     template_string2 = Recaptcha.Template.display(onload: "onLoad", hl: "en")
-    assert template_string1 =~ "https://www.google.com/recaptcha/api.js?onload=onLoad&hl"
-    assert template_string2 =~ "https://www.google.com/recaptcha/api.js?onload=onLoad&hl=en"
+
+    assert template_string1 =~
+             "https://www.google.com/recaptcha/api.js?onload=onLoad&hl"
+
+    assert template_string2 =~
+             "https://www.google.com/recaptcha/api.js?onload=onLoad&hl=en"
   end
 
   test "supplying a invisible recaptcha on option size equal invisible" do
@@ -60,7 +67,9 @@ defmodule RecaptchaTemplateTest do
     template_string = Recaptcha.Template.display(size: "invisible")
     assert template_string =~ "data-callback=\"recaptchaCallback\""
 
-    template_string = Recaptcha.Template.display(size: "invisible", callback: "myCallback")
+    template_string =
+      Recaptcha.Template.display(size: "invisible", callback: "myCallback")
+
     assert template_string =~ "data-callback=\"myCallback\""
   end
 end
