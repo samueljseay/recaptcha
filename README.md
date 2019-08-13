@@ -1,6 +1,8 @@
 # Recaptcha
 
-![Build Status](https://travis-ci.org/samueljseay/recaptcha.svg?branch=master) ![Coverage Status](https://coveralls.io/repos/github/samueljseay/recaptcha/badge.svg?branch=master) [![Hex.pm](https://img.shields.io/badge/Hex-v2.1.1-green.svg)](https://hexdocs.pm/recaptcha)
+[![Build Status](https://travis-ci.org/samueljseay/recaptcha.svg?branch=master)](https://travis-ci.org/samueljseay/recaptcha)
+[![Coverage Status](https://coveralls.io/repos/github/samueljseay/recaptcha/badge.svg?branch=master)](https://coveralls.io/github/samueljseay/recaptcha)
+[![Hex.pm](https://img.shields.io/badge/Hex-v2.1.1-green.svg)](https://hexdocs.pm/recaptcha)
 
 A simple Elixir package for implementing [reCAPTCHA] in Elixir applications.
 
