@@ -11,6 +11,7 @@ defmodule RecaptchaConfigTest do
     System.put_env("TEST_VAR", "test_env_vars")
     Application.put_env(:recaptcha, :test_env_var, {:system, "TEST_VAR"})
 
-    assert Recaptcha.Config.get_env(:recaptcha, :test_env_var) == "test_env_vars"
+    assert Recaptcha.Config.get_env(:recaptcha, :test_env_var) ==
+             "test_env_vars"
   end
 end

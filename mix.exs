@@ -4,8 +4,8 @@ defmodule Recaptcha.Mixfile do
   def project do
     [
       app: :recaptcha,
-      version: "2.3.0",
-      elixir: "~> 1.4",
+      version: "3.0.0",
+      elixir: "~> 1.6",
       description: description(),
       deps: deps(),
       package: package(),
@@ -44,7 +44,7 @@ defmodule Recaptcha.Mixfile do
     [
       {:httpoison, ">= 0.12.0"},
       {:poison, "~> 3.1.0 or ~> 2.2.0 or ~> 1.5.2", optional: true},
-      {:credo, "~> 0.9.3", only: [:dev, :test], runtime: false},
+      {:credo, "~> 1.0", only: [:dev, :test], runtime: false},
       {:ex_doc, ">= 0.0.0", only: :dev},
       {:dialyxir, "~> 0.5", only: [:dev]},
       {:excoveralls, "~> 0.7.1", only: :test}
