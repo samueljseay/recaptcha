@@ -6,6 +6,6 @@ config :recaptcha,
   public_key: {:system, "RECAPTCHA_PUBLIC_KEY"},
   secret: {:system, "RECAPTCHA_PRIVATE_KEY"}
 
-config :recaptcha, :json_library, Poison
+config :recaptcha, :json_library, Jason
 
 import_config "#{Mix.env()}.exs"

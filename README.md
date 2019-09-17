@@ -52,10 +52,10 @@ By default the public and private keys are loaded via the `RECAPTCHA_PUBLIC_KEY`
 
 ### JSON Decoding
 
-By default `reCaptcha` will use `Poison` to decode JSON responses, this can be changed as such:
+By default `reCaptcha` will use `Jason` to decode JSON responses, this can be changed as such:
 
 ```elixir
-  config :recaptcha, :json_library, Jason
+  config :recaptcha, :json_library, Poison
 ```
 
 ## Usage
@@ -129,7 +129,7 @@ Recaptcha provides the `verify/2` method. Below is an example using a Phoenix co
 
 `{:ok, %Recaptcha.Response{challenge_ts: timestamp, hostname: host}}` -> The captcha is valid, see the [documentation](https://developers.google.com/recaptcha/docs/verify#api-response) for more details.
 
-`{:error, errors}` -> `errors` contains atomised versions of the errors returned by the API, See the [error documentation](https://developers.google.com/recaptcha/docs/verify#error-code-reference) for more details. Errors caused by timeouts in HTTPoison or Poison encoding are also returned as atoms. If the recaptcha request succeeds but the challenge is failed, a `:challenge_failed` error is returned.
+`{:error, errors}` -> `errors` contains atomised versions of the errors returned by the API, See the [error documentation](https://developers.google.com/recaptcha/docs/verify#error-code-reference) for more details. Errors caused by timeouts in HTTPoison or Jason encoding are also returned as atoms. If the recaptcha request succeeds but the challenge is failed, a `:challenge_failed` error is returned.
 
 `verify` method also accepts a keyword list as the third parameter with the following options:
 
