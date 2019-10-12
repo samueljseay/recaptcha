@@ -22,8 +22,10 @@ defmodule Recaptcha.Http.MockClient do
   end
 
   def request_verification(
-    "response=invalid_response&secret=6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe" = body,
-    options) do
+        "response=invalid_response&secret=6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe" =
+          body,
+        options
+      ) do
     send(self(), {:request_verification, body, options})
     {:error, [:"invalid-input-response"]}
   end
