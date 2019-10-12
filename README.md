@@ -139,6 +139,30 @@ Option                  | Action                                                
 `secret`                | Private key to send as a parameter of the API request  | Private key from the config file
 `remote_ip`             | Optional. The user's IP address, used by reCaptcha     | no default
 
+
+## Testing
+
+In order to test your endpoints you should set the secret key to the following value in order to receive a positive result from all queries to the Recaptcha engine.
+
+```
+config :recaptcha,
+  secret: "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe"
+```
+
+Setting up tests without network access can be done also. When configured as such a positive or negative result can be generated locally.
+
+```
+config :recaptcha,
+  http_client: Recaptcha.Http.MockClient,
+  secret: "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe"
+
+
+  {:ok, _details} = Recaptcha.verify("valid_response")
+
+  {:error, _details} = Recaptcha.verify("invalid_response")
+
+```
+
 ## Contributing
 
 Check out [CONTRIBUTING.md](/CONTRIBUTING.md) if you want to help.

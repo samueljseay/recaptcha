@@ -14,6 +14,11 @@ defmodule RecaptchaTest do
              Recaptcha.verify("valid_response", secret: @google_test_secret)
   end
 
+  test "When a valid response is supplied, an error response is returned" do
+    assert {:error, [:"invalid-input-response"]} =
+             Recaptcha.verify("invalid_response", secret: @google_test_secret)
+  end
+
   test "When secret is not overridden the configured secret is used" do
     Recaptcha.verify("valid_response")
 
