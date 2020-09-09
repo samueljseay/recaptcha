@@ -15,5 +15,4 @@ defmodule Recaptcha.Config do
 
   defp _get_env({:system, env_variable}), do: System.get_env(env_variable)
   defp _get_env(value), do: value
-
 end

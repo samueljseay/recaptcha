@@ -1,4 +1,34 @@
-<script src="https://www.google.com/recaptcha/api.js?hl=<%= @options[:hl] %>" async defer></script>
+<script src="https://www.google.com/recaptcha/api.js?<%= @options[:onload] %>hl=<%= @options[:hl] %>" async defer></script>
+
+<%= if @options[:size] == "invisible" do %>
+<script type="text/javascript">
+  var form = null;
+
+  function onSubmit(event) {
+    event.preventDefault();
+
+    form = this;
+
+    var recaptchaObject = this.querySelector('div[class="g-recaptcha"]');
+
+    if (recaptchaObject) {
+      grecaptcha.execute();
+    } else {
+      this.submit();
+    }
+  }
+
+  function recaptchaCallback() {
+    form.submit();
+  }
+
+  var forms = document.querySelectorAll("form");
+
+  for (var i = 0; i < forms.length; i++) {
+    forms[i].addEventListener('submit', onSubmit);
+  };
+</script>
+<% end %>
 
 <div class="g-recaptcha"
     data-sitekey="<%= @public_key %>"
@@ -6,7 +36,8 @@
     data-type="<%= @options[:type] %>"
     data-tabindex="<%= @options[:tabindex] %>"
     data-size="<%= @options[:size] %>"
-    data-callback="<%= @options[:callback] %>">
+    data-badge="<%= @options[:badge] %>"
+    data-callback="<%= @callback %>">
 </div>
 
 <%= if @options[:noscript] do %>
