@@ -1,6 +1,6 @@
 defmodule Recaptcha.Http do
   @moduledoc """
-   Responsible for managing HTTP requests to the reCAPTCHA API
+  Responsible for managing HTTP requests to the reCAPTCHA API.
   """
 
   alias Recaptcha.Config
@@ -22,18 +22,19 @@ defmodule Recaptcha.Http do
 
     * `:timeout` - the timeout for the request (defaults to 5000ms)
 
-  ## Example
+  ## Examples
 
-    {:ok, %{
-      "success" => success,
-      "challenge_ts" => ts,
-      "hostname" => host,
-      "error-codes" => errors
-    }} = Recaptcha.Http.request_verification(%{
-      secret: "secret",
-      response: "response",
-      remote_ip: "remote_ip"
-    })
+      {:ok, %{
+        "success" => success,
+        "challenge_ts" => ts,
+        "hostname" => host,
+        "error-codes" => errors
+      }} = Recaptcha.Http.request_verification(%{
+        secret: "secret",
+        response: "response",
+        remote_ip: "remote_ip"
+      })
+
   """
   @spec request_verification(binary, Keyword.t) :: {:ok, map} | {:error, [atom]}
   def request_verification(body, options \\ []) do

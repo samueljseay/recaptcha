@@ -1,9 +1,9 @@
 defmodule Recaptcha do
   @moduledoc """
-    A module for verifying reCAPTCHA version 2.0 response strings.
+  A module for verifying reCAPTCHA version 2.0 response strings.
 
-    See the [documentation](https://developers.google.com/recaptcha/docs/verify)
-    for more details.
+  See the [documentation](https://developers.google.com/recaptcha/docs/verify)
+  for more details.
   """
 
   alias Recaptcha.{Config, Http, Response}
@@ -20,9 +20,10 @@ defmodule Recaptcha do
       provided in application config)
     * `:remote_ip` - the IP address of the user (optional and not set by default)
 
-  ## Example
+  ## Examples
 
-    {:ok, api_response} = Recaptcha.verify("response_string")
+      {:ok, api_response} = Recaptcha.verify("response_string")
+
   """
   @spec verify(String.t(), Keyword.t()) ::
             {:ok, Response.t()} | {:error, [atom]}
