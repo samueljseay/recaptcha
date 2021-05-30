@@ -1,10 +1,10 @@
 defmodule Recaptcha.Config do
   @moduledoc """
-  Provides application/system environment variable lookup at runtime
+  Provides application/system environment variable lookup at runtime.
   """
 
   @doc """
-  Returns the requested variable
+  Returns the requested variable.
   """
   @spec get_env(atom, atom, any) :: any
   def get_env(application, key, default \\ nil) do

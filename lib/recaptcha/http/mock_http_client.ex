@@ -1,6 +1,6 @@
 defmodule Recaptcha.Http.MockClient do
   @moduledoc """
-    A mock HTTP client used for testing.
+  A mock HTTP client used for testing.
   """
   alias Recaptcha.Http
 

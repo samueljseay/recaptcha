@@ -2,7 +2,11 @@
 
 [![Build Status](https://travis-ci.org/samueljseay/recaptcha.svg?branch=master)](https://travis-ci.org/samueljseay/recaptcha)
 [![Coverage Status](https://coveralls.io/repos/github/samueljseay/recaptcha/badge.svg?branch=master)](https://coveralls.io/github/samueljseay/recaptcha)
-[![Hex.pm](https://img.shields.io/badge/Hex-v2.1.1-green.svg)](https://hexdocs.pm/recaptcha)
+[![Module Version](https://img.shields.io/hexpm/v/recaptcha.svg)](https://hex.pm/packages/recaptcha)
+[![Hex Docs](https://img.shields.io/badge/hex-docs-lightgreen.svg)](https://hexdocs.pm/recaptcha/)
+[![Total Download](https://img.shields.io/hexpm/dt/recaptcha.svg)](https://hex.pm/packages/recaptcha)
+[![License](https://img.shields.io/hexpm/l/recaptcha.svg)](https://github.com/samueljseay/recaptcha/blob/master/LICENSE)
+[![Last Updated](https://img.shields.io/github/last-commit/samueljseay/recaptcha.svg)](https://github.com/samueljseay/recaptcha/commits/master)
 
 A simple Elixir package for implementing [reCAPTCHA] in Elixir applications.
 
@@ -20,7 +24,7 @@ if you have any problems with migrating.
 
 ## Installation
 
-1. Add recaptcha to your `mix.exs` dependencies
+Add `:recaptcha` to your `mix.exs` dependencies:
 
 ```elixir
   defp deps do
@@ -30,24 +34,26 @@ if you have any problems with migrating.
   end
 ```
 
-2. List `:recaptcha` as an application dependency
+List `:recaptcha` as an application dependency:
 
 ```elixir
   def application do
-    [ extra_applications: [:recaptcha] ]
+    [
+      extra_applications: [:recaptcha]
+    ]
   end
 ```
 
-3. Run `mix do deps.get, compile`
+Run `mix do deps.get, compile`
 
 ## Config
 
 By default the public and private keys are loaded via the `RECAPTCHA_PUBLIC_KEY` and `RECAPTCHA_PRIVATE_KEY` environment variables.
 
 ```elixir
-  config :recaptcha,
-    public_key: {:system, "RECAPTCHA_PUBLIC_KEY"},
-    secret: {:system, "RECAPTCHA_PRIVATE_KEY"}
+config :recaptcha,
+  public_key: {:system, "RECAPTCHA_PUBLIC_KEY"},
+  secret: {:system, "RECAPTCHA_PRIVATE_KEY"}
 ```
 
 ### JSON Decoding
@@ -55,7 +61,7 @@ By default the public and private keys are loaded via the `RECAPTCHA_PUBLIC_KEY`
 By default `reCaptcha` will use `Jason` to decode JSON responses, this can be changed as such:
 
 ```elixir
-  config :recaptcha, :json_library, Poison
+config :recaptcha, :json_library, Poison
 ```
 
 ## Usage
@@ -64,7 +70,8 @@ By default `reCaptcha` will use `Jason` to decode JSON responses, this can be ch
 
 Use `raw` (if you're using Phoenix.HTML) and `Recaptcha.Template.display/1` methods to render the captcha widget.
 
-For recaptcha with checkbox
+For recaptcha with checkbox:
+
 ```html
 <form name="someform" method="post" action="/somewhere">
   ...
@@ -73,7 +80,8 @@ For recaptcha with checkbox
 </form>
 ```
 
-For invisible recaptcha
+For invisible recaptcha:
+
 ```html
 <form name="someform" method="post" action="/somewhere">
   ...
@@ -84,7 +92,7 @@ For invisible recaptcha
 
 To change the position of the invisible recaptcha, use an option badge. See https://developers.google.com/recaptcha/docs/invisible on the date-badge.
 
-Since recaptcha loads Javascript code asynchronously, you cannot immediately submit the captcha form.
+Since recaptcha loads JavaScript code asynchronously, you cannot immediately submit the captcha form.
 If you have logic that needs to know if the captcha code has already been loaded (for example disabling submit button until fully loaded), it is possible to pass in a JS-callback that will be called once the captcha has finished loading.
 This can be done as follows:
 
@@ -117,12 +125,12 @@ Option                  | Action                                                
 Recaptcha provides the `verify/2` method. Below is an example using a Phoenix controller action:
 
 ```elixir
-  def create(conn, params) do
-    case Recaptcha.verify(params["g-recaptcha-response"]) do
-      {:ok, response} -> do_something
-      {:error, errors} -> handle_error
-    end
+def create(conn, params) do
+  case Recaptcha.verify(params["g-recaptcha-response"]) do
+    {:ok, response} -> do_something
+    {:error, errors} -> handle_error
   end
+end
 ```
 
 `verify` method sends a `POST` request to the reCAPTCHA API and returns 2 possible values:
@@ -144,14 +152,14 @@ Option                  | Action                                                
 
 In order to test your endpoints you should set the secret key to the following value in order to receive a positive result from all queries to the Recaptcha engine.
 
-```
+```elixir
 config :recaptcha,
   secret: "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe"
 ```
 
 Setting up tests without network access can be done also. When configured as such a positive or negative result can be generated locally.
 
-```
+```elixir
 config :recaptcha,
   http_client: Recaptcha.Http.MockClient,
   secret: "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe"
@@ -167,6 +175,9 @@ config :recaptcha,
 
 Check out [CONTRIBUTING.md](/CONTRIBUTING.md) if you want to help.
 
-## License
+## Copyright and License
 
-[MIT License](http://www.opensource.org/licenses/MIT).
+Copyright (c) 2016 Samuel Seay
+
+This library is released under the MIT License. See the [LICENSE.md](./LICENSE.md) file
+for further details.
