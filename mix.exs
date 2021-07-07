@@ -57,7 +57,7 @@ defmodule Recaptcha.Mixfile do
 
   defp package do
     [
-      files: ["lib", "mix.exs", "README.md", "LICENSE"],
+      files: ["lib", "mix.exs", "README.md", "LICENSE.md"],
       maintainers: ["Samuel Seay", "Nikita Sobolev", "Michael JustMikey"],
       licenses: ["MIT"],
       links: %{"GitHub" => "https://github.com/samueljseay/recaptcha"}
