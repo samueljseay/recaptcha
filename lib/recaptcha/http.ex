@@ -13,7 +13,7 @@ defmodule Recaptcha.Http do
   @default_verify_url "https://www.google.com/recaptcha/api/siteverify"
 
   @doc """
-  Sends an HTTP request to the reCAPTCHA version 2.0 API.
+  Sends an HTTP request to the reCAPTCHA API.
 
   See the [docs](https://developers.google.com/recaptcha/docs/verify#api-response)
   for more details on the API response.
@@ -28,6 +28,8 @@ defmodule Recaptcha.Http do
         "success" => success,
         "challenge_ts" => ts,
         "hostname" => host,
+        "score" => score,
+        "action" => action,
         "error-codes" => errors
       }} = Recaptcha.Http.request_verification(%{
         secret: "secret",
@@ -55,6 +57,7 @@ defmodule Recaptcha.Http do
       {:error, :invalid} -> {:error, [:invalid_api_response]}
       {:error, {:invalid, _reason}} -> {:error, [:invalid_api_response]}
       {:error, %{reason: reason}} -> {:error, [reason]}
+      {:error, %{"error-codes" => error_codes}} -> {:error, error_codes}
     end
   end
 end
