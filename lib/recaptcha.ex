@@ -1,6 +1,6 @@
 defmodule Recaptcha do
   @moduledoc """
-  A module for verifying reCAPTCHA version 2.0 response strings.
+  A module for verifying reCAPTCHA response strings.
 
   See the [documentation](https://developers.google.com/recaptcha/docs/verify)
   for more details.
@@ -40,6 +40,22 @@ defmodule Recaptcha do
 
       {:ok, %{"success" => false, "error-codes" => errors}} ->
         {:error, Enum.map(errors, &atomise_api_error/1)}
+
+      {:ok,
+       %{
+         "success" => true,
+         "challenge_ts" => timestamp,
+         "hostname" => host,
+         "action" => action,
+         "score" => score
+       }} ->
+        {:ok,
+         %Response{
+           challenge_ts: timestamp,
+           hostname: host,
+           action: action,
+           score: score
+         }}
 
       {:ok,
        %{"success" => true, "challenge_ts" => timestamp, "hostname" => host}} ->
