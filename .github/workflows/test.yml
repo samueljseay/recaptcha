@@ -1,0 +1,41 @@
+name: Elixir CI
+
+on:
+  schedule:
+    - cron: "0 5 * * *"
+  push:
+    branches: master
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  multi_elixir_test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        image:
+
+          - "hexpm/elixir:1.6.6-erlang-21.3-alpine-3.12.0"
+          - "hexpm/elixir:1.7.4-erlang-22.3-alpine-3.13.1"
+          - "hexpm/elixir:1.8.2-erlang-22.3-alpine-3.13.1"
+          - "hexpm/elixir:1.9.4-erlang-20.3-alpine-3.12.0"
+          - "hexpm/elixir:1.10.4-erlang-23.3.4-alpine-3.16.0"
+          - "hexpm/elixir:1.11.4-erlang-24.3-alpine-3.17.0"
+          - "hexpm/elixir:1.12.3-erlang-24.3-alpine-3.17.0"
+          - "hexpm/elixir:1.13.4-erlang-25.2-alpine-3.17.0"
+          - "hexpm/elixir:1.14.3-erlang-25.2.2-alpine-3.17.0"
+    container:
+      image: ${{ matrix.image }}
+    env: 
+      MIX_ENV: test
+    steps: 
+      - uses: actions/checkout@v3
+      - run: mix local.rebar --force
+      - run: mix local.hex --force
+      - run: mix do deps.get
+      - run: mix test
+      - run: mix format --check-formatted
+      - run: mix credo --strict
