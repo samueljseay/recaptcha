@@ -1,0 +1,20 @@
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  publish:
+    env: 
+      HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
+    runs-on: ubuntu-latest
+    container:
+      image: "hexpm/elixir:1.14.3-erlang-25.2.2-alpine-3.17.0"
+    steps:
+      - name: Check out
+        uses: actions/checkout@v3
+      - run: mix local.rebar --force
+      - run: mix local.hex --force
+      - run: mix do deps.get, compile
+      - name: Publish
+        run: mix hex.publish --yes

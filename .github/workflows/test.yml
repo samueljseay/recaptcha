@@ -1,0 +1,41 @@
+name: Run Elixir Tests
+
+on:
+  push:
+    branches:
+      - master
+      - github-actions-support
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  elixir_test:
+    name: Run Elixir Tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        image:
+          - "hexpm/elixir:1.10.4-erlang-23.3.4-alpine-3.16.0"
+          - "hexpm/elixir:1.11.4-erlang-24.3-alpine-3.17.0"
+          - "hexpm/elixir:1.12.3-erlang-24.3-alpine-3.17.0"
+          - "hexpm/elixir:1.13.4-erlang-25.2-alpine-3.17.0"
+          - "hexpm/elixir:1.14.3-erlang-25.2.2-alpine-3.17.0"
+    container:
+      image: ${{ matrix.image }}
+    env:
+      MIX_ENV: test
+    steps:
+      - run: apk add git
+      - uses: actions/checkout@v3
+      - run: mix local.rebar --force
+      - run: mix local.hex --force
+      - run: mix do deps.get
+      - run: mix test
+      - run: mix format --check-formatted
+      - run: mix credo --strict
+      - run: mix coveralls.github
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

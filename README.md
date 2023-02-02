@@ -1,6 +1,5 @@
 # Recaptcha
 
-[![Build Status](https://travis-ci.org/samueljseay/recaptcha.svg?branch=master)](https://travis-ci.org/samueljseay/recaptcha)
 [![Coverage Status](https://coveralls.io/repos/github/samueljseay/recaptcha/badge.svg?branch=master)](https://coveralls.io/github/samueljseay/recaptcha)
 [![Module Version](https://img.shields.io/hexpm/v/recaptcha.svg)](https://hex.pm/packages/recaptcha)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-lightgreen.svg)](https://hexdocs.pm/recaptcha/)

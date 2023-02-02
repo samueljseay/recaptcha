@@ -2,13 +2,13 @@ defmodule Recaptcha.Mixfile do
   use Mix.Project
 
   @source_url "https://github.com/samueljseay/recaptcha"
-  @version "3.1.0"
+  @version "4.0.0"
 
   def project do
     [
       app: :recaptcha,
       version: @version,
-      elixir: "~> 1.6",
+      elixir: "~> 1.10",
       description: description(),
       deps: deps(),
       package: package(),
@@ -48,10 +48,10 @@ defmodule Recaptcha.Mixfile do
     [
       {:httpoison, ">= 0.12.0"},
       {:jason, "~> 1.2", optional: true},
-      {:credo, "~> 1.0", only: [:dev, :test], runtime: false},
+      {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
       {:dialyxir, "~> 0.5", only: [:dev]},
-      {:excoveralls, "~> 0.7.1", only: :test}
+      {:excoveralls, "~> 0.15.3", only: :test}
     ]
   end
 
