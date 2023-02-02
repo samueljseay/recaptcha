@@ -51,7 +51,7 @@ defmodule Recaptcha.Mixfile do
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
       {:dialyxir, "~> 0.5", only: [:dev]},
-      {:excoveralls, "~> 0.7.1", only: :test}
+      {:excoveralls, "~> 0.15.3", only: :test}
     ]
   end
 
