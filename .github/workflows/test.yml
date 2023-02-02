@@ -12,14 +12,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  coveralls:
-    name: Coveralls LCOV
-    runs-on: ubuntu-latest
-    steps:
-      - name: Coveralls
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
   elixir_test:
     name: Run Elixir Tests
     runs-on: ubuntu-latest
