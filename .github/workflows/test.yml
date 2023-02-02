@@ -13,6 +13,7 @@ concurrency:
 
 jobs:
   elixir_test:
+    name: Run Elixir Tests
     runs-on: ubuntu-latest
     strategy:
       matrix:
