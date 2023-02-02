@@ -36,6 +36,7 @@ jobs:
     env:
       MIX_ENV: test
     steps:
+      - run: apk add git
       - uses: actions/checkout@v3
       - run: mix local.rebar --force
       - run: mix local.hex --force
