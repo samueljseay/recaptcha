@@ -1,10 +1,10 @@
-name: Elixir CI
+name: Run Elixir Tests
 
 on:
-  schedule:
-    - cron: "0 5 * * *"
   push:
-    branches: master
+    branches: 
+      - master
+      - github-actions-support
   pull_request:
 
 concurrency:
