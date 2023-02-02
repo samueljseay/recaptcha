@@ -47,9 +47,8 @@ defmodule Recaptcha.Http do
 
     result =
       with {:ok, response} <-
-             HTTPoison.post(url, body, @headers, opts),
-           {:ok, data} <- json.decode(response.body) do
-        {:ok, data}
+             HTTPoison.post(url, body, @headers, opts) do
+        json.decode(response.body)
       end
 
     case result do
