@@ -18,6 +18,3 @@ jobs:
       - run: mix do deps.get, compile
       - name: Publish
         run: mix hex.publish --yes
-
-
-
